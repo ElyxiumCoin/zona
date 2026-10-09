@@ -118,10 +118,10 @@ nav{position:fixed;bottom:0;width:100%;max-width:480px;background:rgba(13,21,15,
       </div>
     </div>
     <div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:2px">
-      <button class="btn btn-xs btn-green" onclick="game.setInvFilter('all')">Все</button>
+      <button class="btn btn-xs btn-green" onclick="game.setInvFilter('all')">Все (134)</button>
       <button class="btn btn-xs btn-dark" onclick="game.setInvFilter('weapon')">Оружие</button>
       <button class="btn btn-xs btn-dark" onclick="game.setInvFilter('armor')">Броня</button>
-      <button class="btn btn-xs btn-dark" onclick="game.setInvFilter('artifact')">Арты</button>
+      <button class="btn btn-xs btn-dark" onclick="game.setInvFilter('artifact')">Артефакты</button>
       <button class="btn btn-xs btn-dark" onclick="game.setInvFilter('med')">Медицина</button>
       <button class="btn btn-xs btn-dark" onclick="game.setInvFilter('food')">Припасы</button>
     </div>
@@ -147,7 +147,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:480px;background:rgba(13,21,15,
       <div class="cheader"><span style="color:var(--cyan)">📋 КПК: КОНТРАКТЫ И ДОСТИЖЕНИЯ</span></div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-sm btn-cyan" id="btn-q-contracts" onclick="game.setQuestView('contracts')">Контракты (6 ч.)</button>
-        <button class="btn btn-sm btn-dark" id="btn-q-achievements" onclick="game.setQuestView('achievements')">Достижения</button>
+        <button class="btn btn-sm btn-dark" id="btn-q-achievements" onclick="game.setQuestView('achievements')">Достижения (15)</button>
       </div>
     </div>
     <div id="quests-list" style="display:flex;flex-direction:column;gap:6px"></div>
@@ -173,7 +173,7 @@ nav{position:fixed;bottom:0;width:100%;max-width:480px;background:rgba(13,21,15,
   <!-- MODAL: NICKNAME -->
   <div id="modal-nick" class="modal"><div class="modal-box">
     <div class="mheader"><span style="font-weight:800;font-size:15px;color:#fff">Позывной сталкера</span></div>
-    <div style="font-size:12px;color:var(--muted)">Укажите позывной сталкера (от 3 до 16 символов):</div>
+    <div style="font-size:12px;color:var(--muted)">Укажите уникальный позывной сталкера (от 3 до 16 символов):</div>
     <input id="input-nick" type="text" maxlength="16" style="background:#09100a;border:1px solid var(--neon);color:#fff;padding:8px 10px;border-radius:6px;font-size:14px;outline:none" placeholder="Призрак_69">
     <button class="btn btn-green btn-block" onclick="game.saveNick()">Подтвердить позывной</button>
   </div></div>
@@ -306,131 +306,184 @@ class SoundFX{
   gram(){[587,740,880,1174,1480].forEach((n,i)=>setTimeout(()=>this.beep(n,"triangle",0.25,0.12),i*80));}
 }
 
-const DB={
-  items:{
-    "knife_rusty":{id:"knife_rusty",rarity:"common",type:"weapon",name:"Ржавый нож",icon:"🗡️",dmg:[4,8],price:80,desc:"Стандартное холодное оружие"},
-    "pistol_pm":{id:"pistol_pm",rarity:"common",type:"weapon",name:"Пистолет ПМ",icon:"🔫",dmg:[7,12],price:160,desc:"Надёжный 9мм пистолет"},
-    "pistol_tt":{id:"pistol_tt",rarity:"common",type:"weapon",name:"ТТ-33",icon:"🔫",dmg:[10,16],price:240,desc:"Высокая пробивная мощь"},
-    "shotgun_sawn":{id:"shotgun_sawn",rarity:"uncommon",type:"weapon",name:"Обрез ТОЗ-34",icon:"💥",dmg:[15,24],price:380,desc:"Убойный на ближней дистанции"},
-    "smg_viper":{id:"smg_viper",rarity:"uncommon",type:"weapon",name:"Гадюка-5",icon:"🔫",dmg:[18,28],price:580,desc:"Скорострельный пистолет-пулемёт"},
-    "rifle_ak74":{id:"rifle_ak74",rarity:"rare",type:"weapon",name:"АК-74М",icon:"⚡",dmg:[26,42],price:1100,desc:"Автомат калибра 5.45"},
-    "shotgun_spas12":{id:"shotgun_spas12",rarity:"rare",type:"weapon",name:"СПАС-12",icon:"💥",dmg:[35,55],price:1650,desc:"Дробовик для зачистки тварей"},
-    "rifle_vintorez":{id:"rifle_vintorez",rarity:"epic",type:"weapon",name:"ВСС «Винторез»",icon:"🎯",dmg:[50,75],price:3200,desc:"Бесшумная снайперская винтовка"},
-    "heavy_pkm":{id:"heavy_pkm",rarity:"epic",type:"weapon",name:"Пулемёт ПКМ",icon:"🔥",dmg:[68,98],price:5400,desc:"Тяжёлое огневое подавление"},
-    "gauss_rifle":{id:"gauss_rifle",rarity:"legendary",type:"weapon",name:"Гаусс-пушка",icon:"⚡",dmg:[110,160],price:12000,desc:"Электромагнитная винтовка монолита"},
-    "fn2000_proto":{id:"fn2000_proto",rarity:"mythic",type:"weapon",name:"ФТ-200M «Армагеддон»",icon:"🔱",dmg:[180,250],price:35000,desc:"Сверхтехнологичный штурмовой комплекс"},
+// БАЗА ДАННЫХ: 134 ПРЕДМЕТА, 28 ЛОКАЦИЙ, 20 ВРАГОВ, 20 ЗАДАНИЙ, 15 ДОСТИЖЕНИЙ
+const DB = {
+  items: {
+    "knife_rusty":{"id":"knife_rusty","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Охотничий нож","icon":"🗡️","dmg":[7,12],"price":90,"desc":"Базовый походный клинок сталкера"},
+    "knife_machete":{"id":"knife_machete","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Мачете сталкера","icon":"🗡️","dmg":[9,15],"price":150,"desc":"Тяжёлый тесак для тростника и мутантов"},
+    "knife_diver":{"id":"knife_diver","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Нож диверсанта","icon":"🗡️","dmg":[12,18],"price":220,"desc":"Острое лезвие с серрейтором"},
+    "pistol_pm":{"id":"pistol_pm","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Пистолет ПМ","icon":"🔫","dmg":[10,16],"price":240,"desc":"Простой и надёжный пистолет Макарова"},
+    "pistol_tt":{"id":"pistol_tt","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Пистолет ТТ-33","icon":"🔫","dmg":[14,21],"price":350,"desc":"Мощный патрон 7.62х25"},
+    "pistol_nagan":{"id":"pistol_nagan","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Револьвер Наган","icon":"🔫","dmg":[13,19],"price":310,"desc":"Семь патронов калибра 7.62"},
+    "shotgun_bm16":{"id":"shotgun_bm16","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Обрез БМ-16","icon":"💥","dmg":[22,34],"price":450,"desc":"Сокрушительный дуплет в упор"},
+    "shotgun_ij43":{"id":"shotgun_ij43","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Ружьё ИЖ-43","icon":"💥","dmg":[25,38],"price":550,"desc":"Классическая двустволка"},
+    "shotgun_toz":{"id":"shotgun_toz","rarity":"common","rarityName":"Обычный","type":"weapon","name":"Двустволка ТОЗ-34","icon":"💥","dmg":[28,42],"price":680,"desc":"Высокая кучность на ближней дистанции"},
+    "pistol_fort":{"id":"pistol_fort","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"Форт-12","icon":"🔫","dmg":[16,24],"price":480,"desc":"Украинский армейский пистолет"},
+    "pistol_beretta":{"id":"pistol_beretta","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"Марта 92FS","icon":"🔫","dmg":[18,26],"price":560,"desc":"Итальянская точность и 15 патронов"},
+    "pistol_colt":{"id":"pistol_colt","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"Кольт 1911","icon":"🔫","dmg":[22,30],"price":690,"desc":"Калибр .45 ACP останавливает мутанта с выстрела"},
+    "smg_viper":{"id":"smg_viper","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"Гадюка-5","icon":"⚡","dmg":[24,35],"price":850,"desc":"Скорострельный немецкий пистолет-пулемёт"},
+    "shotgun_winchester":{"id":"shotgun_winchester","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"Чейзер-13","icon":"💥","dmg":[36,52],"price":1150,"desc":"Помповый дробовик на 6 патронов"},
+    "rifle_aksu":{"id":"rifle_aksu","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"АКС-74У","icon":"⚡","dmg":[32,46],"price":1300,"desc":"Укороченный автомат для тесных руин"},
+    "rifle_mp5sd":{"id":"rifle_mp5sd","rarity":"uncommon","rarityName":"Необычный","type":"weapon","name":"Гадюка с глушителем","icon":"⚡","dmg":[28,40],"price":1050,"desc":"Бесшумное оружие ночных вылазок"},
+    "rifle_ak74":{"id":"rifle_ak74","rarity":"rare","rarityName":"Редкий","type":"weapon","name":"АК-74М","icon":"⚡","dmg":[42,60],"price":1900,"desc":"Основной автомат сталкеров в Зоне"},
+    "rifle_abakan":{"id":"rifle_abakan","rarity":"rare","rarityName":"Редкий","type":"weapon","name":"АН-94 «Абакан»","icon":"⚡","dmg":[48,68],"price":2400,"desc":"Стрельба с отсечкой по два патрона в точку"},
+    "rifle_lr300":{"id":"rifle_lr300","rarity":"rare","rarityName":"Редкий","type":"weapon","name":"ТРс-301","icon":"⚡","dmg":[46,65],"price":2300,"desc":"Точная американская штурмовая винтовка"},
+    "shotgun_spas12":{"id":"shotgun_spas12","rarity":"rare","rarityName":"Редкий","type":"weapon","name":"СПСА-14","icon":"💥","dmg":[55,78],"price":2700,"desc":"Штурмовой боевой дробовик Зоны"},
+    "sniper_sks":{"id":"sniper_sks","rarity":"rare","rarityName":"Редкий","type":"weapon","name":"Карабин СКС","icon":"🎯","dmg":[40,58],"price":1800,"desc":"Самозарядный охотничий карабин"},
+    "sniper_svd":{"id":"sniper_svd","rarity":"rare","rarityName":"Редкий","type":"weapon","name":"СВД «Тигр»","icon":"🎯","dmg":[65,92],"price":3400,"desc":"Армейская снайперская винтовка 7.62х54"},
+    "rifle_val":{"id":"rifle_val","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"СА «Лавина» (АС Вал)","icon":"🎯","dmg":[62,88],"price":4200,"desc":"Спецназовский дозвуковой автомат 9х39"},
+    "rifle_groza":{"id":"rifle_groza","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"ОЦ-14 «Гроза»","icon":"🔥","dmg":[70,98],"price":4900,"desc":"Штурмовой комплекс с подствольником"},
+    "rifle_g36":{"id":"rifle_g36","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"ГП-37","icon":"⚡","dmg":[66,94],"price":4700,"desc":"Высокоточная оптика и безупречная надёжность"},
+    "rifle_fn2000":{"id":"rifle_fn2000","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"ФТ-200М","icon":"🔱","dmg":[78,110],"price":6200,"desc":"Компьютеризированная винтовка будущего"},
+    "sniper_vintorez":{"id":"sniper_vintorez","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"ВСС «Винторез»","icon":"🎯","dmg":[82,115],"price":5800,"desc":"Легендарная бесшумная снайперская винтовка"},
+    "sniper_svu":{"id":"sniper_svu","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"СВУ Булл-пап","icon":"🎯","dmg":[75,105],"price":5300,"desc":"Компактный вариант дальнобойной снайперки"},
+    "heavy_pkm":{"id":"heavy_pkm","rarity":"epic","rarityName":"Эпический","type":"weapon","name":"Пулемёт ПКМ 7.62","icon":"🔥","dmg":[90,130],"price":7500,"desc":"Ленточное питание косит орды мутантов"},
+    "sniper_vykhlop":{"id":"sniper_vykhlop","rarity":"legendary","rarityName":"Легендарный","type":"weapon","name":"ВКС «Выхлоп» 12.7","icon":"🎯","dmg":[125,175],"price":13500,"desc":"Бесшумная крупнокалиберная винтовка спецслужб"},
+    "gun_rg6":{"id":"gun_rg6","rarity":"legendary","rarityName":"Легендарный","type":"weapon","name":"Револьверный Гранатомёт РГ-6","icon":"💥","dmg":[140,200],"price":15000,"desc":"Шесть гранат ВОГ-25 разносят укрытия в щепки"},
+    "gun_gauss":{"id":"gun_gauss","rarity":"legendary","rarityName":"Легендарный","type":"weapon","name":"Винтовка Гаусса «Призрак»","icon":"⚡","dmg":[160,225],"price":19000,"desc":"Электромагнитный разгон игл артефактом «Вспышка»"},
+    "gun_rpg":{"id":"gun_rpg","rarity":"legendary","rarityName":"Легендарный","type":"weapon","name":"РПГ-7 «Тайфун»","icon":"🚀","dmg":[180,260],"price":22000,"desc":"Кумулятивный выстрел по боссам Зоны"},
+    "knife_noosphere":{"id":"knife_noosphere","rarity":"mythic","rarityName":"Мифический","type":"weapon","name":"Клинок Ноосферы","icon":"🗡️","dmg":[165,230],"price":38000,"desc":"Лезвие рассекает само пространство (+165-230 Урон)"},
+    "gun_railgun":{"id":"gun_railgun","rarity":"mythic","rarityName":"Мифический","type":"weapon","name":"Рельсотрон «Судный День»","icon":"⚡","dmg":[220,310],"price":55000,"desc":"Сверхтяжёлый рельсовый ускоритель на энергии Монолита"},
+    "gun_monolith_wrath":{"id":"gun_monolith_wrath","rarity":"mythic","rarityName":"Мифический","type":"weapon","name":"Карабин «Гнев Монолита»","icon":"🔮","dmg":[250,350],"price":70000,"desc":"Артефактное оружие высших жрецов Саркофага"},
+    "gun_singularity":{"id":"gun_singularity","rarity":"mythic","rarityName":"Мифический","type":"weapon","name":"Плазмоизлучатель «Сингулярность»","icon":"🌌","dmg":[290,420],"price":95000,"desc":"Стреляет сгустками чистой гравитационной аномалии"},
 
-    "jacket_leather":{id:"jacket_leather",rarity:"common",type:"armor",name:"Кожаная куртка",icon:"🧥",def:3,hp:10,price:120,desc:"Базовая защита от укусов"},
-    "jacket_bandit":{id:"jacket_bandit",rarity:"common",type:"armor",name:"Бандитский плащ",icon:"🧥",def:6,hp:20,price:250,desc:"Плотная кожа и тёмный цвет"},
-    "suit_stalker":{id:"suit_stalker",rarity:"uncommon",type:"armor",name:"Комбинезон «Заря»",icon:"🦺",def:14,hp:45,price:850,desc:"Универсальный сталкерский костюм"},
-    "suit_dolg":{id:"suit_dolg",rarity:"rare",type:"armor",name:"ПСЗ-9д «Броня Долга»",icon:"🦺",def:25,hp:80,price:2100,desc:"Усиленная защита от атак"},
-    "suit_seva":{id:"suit_seva",rarity:"epic",type:"armor",name:"Научный костюм СЕВА",icon:"🤿",def:38,hp:120,price:4600,desc:"Отличная защита от радиации"},
-    "suit_skat":{id:"suit_skat",rarity:"epic",type:"armor",name:"СКАТ-9М",icon:"🛡️",def:52,hp:160,price:7800,desc:"Армейский штурмовой бронекостюм"},
-    "suit_exoskeleton":{id:"suit_exoskeleton",rarity:"legendary",type:"armor",name:"Экзоскелет «Титан»",icon:"🤖",def:85,hp:280,price:18000,desc:"Гидравлика и титановые пластины"},
-    "suit_monolith_x":{id:"suit_monolith_x",rarity:"mythic",type:"armor",name:"Экзоскелет «Ноосфера»",icon:"🔮",def:135,hp:420,price:45000,desc:"Костюм, созданный из энергии Зоны"},
+    "armor_jacket":{"id":"armor_jacket","rarity":"common","rarityName":"Обычный","type":"armor","name":"Кожаная куртка новичка","icon":"🧥","def":6,"maxHp":10,"maxEnergy":5,"radResist":5,"price":250,"desc":"Базовая сталкерская куртка (+6 Броня, +10 HP)"},
+    "armor_trenchcoat":{"id":"armor_trenchcoat","rarity":"common","rarityName":"Обычный","type":"armor","name":"Бандитский кожаный плащ","icon":"🧥","def":10,"maxHp":18,"maxEnergy":8,"price":420,"desc":"Плотная промасленная кожа бандитов (+10 Броня)"},
+    "armor_rad_suit":{"id":"armor_rad_suit","rarity":"uncommon","rarityName":"Необычный","type":"armor","name":"Костюм химзащиты Л-1","icon":"🤿","def":14,"maxHp":25,"price":750,"desc":"Прорезиненный комбинезон (+14 Броня, антирад)"},
+    "armor_stalker":{"id":"armor_stalker","rarity":"uncommon","rarityName":"Необычный","type":"armor","name":"Комбинезон «Заря»","icon":"🦺","def":20,"maxHp":40,"price":1200,"desc":"Символ вольного сталкерства (+20 Броня, +40 HP)"},
+    "armor_cs_suit":{"id":"armor_cs_suit","rarity":"uncommon","rarityName":"Необычный","type":"armor","name":"Бронежилет «Чистого Неба» ЧН-1","icon":"🦺","def":25,"maxHp":50,"price":1650,"desc":"Камуфляж болотных исследователей (+25 Броня)"},
+    "armor_merc_suit":{"id":"armor_merc_suit","rarity":"rare","rarityName":"Редкий","type":"armor","name":"Штурмовой комбинезон наёмника","icon":"🪖","def":34,"maxHp":75,"price":2800,"desc":"Импортные бронепластины (+34 Броня, +75 HP)"},
+    "armor_combat_cuirass":{"id":"armor_combat_cuirass","rarity":"rare","rarityName":"Редкий","type":"armor","name":"Штурмовая кираса Долга «Щит»","icon":"🛡️","def":42,"maxHp":95,"price":3600,"desc":"Стальная кованая кираса бойцов Долга (+42 Броня)"},
+    "armor_freedom_wind":{"id":"armor_freedom_wind","rarity":"rare","rarityName":"Редкий","type":"armor","name":"Комбинезон «Ветер Свободы»","icon":"🦺","def":36,"maxHp":80,"price":3100,"desc":"Кевлар и свобода движений (+36 Броня, +80 HP)"},
+    "armor_seva":{"id":"armor_seva","rarity":"epic","rarityName":"Эпический","type":"armor","name":"Научный скафандр «СЕВА»","icon":"🤿","def":52,"maxHp":120,"price":5400,"desc":"Замкнутая система дыхания (+52 Броня, +120 HP)"},
+    "armor_skat":{"id":"armor_skat","rarity":"epic","rarityName":"Эпический","type":"armor","name":"Бронекостюм спецназа «СКАТ-9М»","icon":"🛡️","def":65,"maxHp":160,"price":7800,"desc":"Тяжёлый армейский штурмовой комплект (+65 Броня)"},
+    "armor_monolith_suit":{"id":"armor_monolith_suit","rarity":"epic","rarityName":"Эпический","type":"armor","name":"Комбинезон адепта Монолита","icon":"🗿","def":58,"maxHp":140,"price":6500,"desc":"Городской серый камуфляж с бронекерамикой (+58 Броня)"},
+    "armor_exo_cs":{"id":"armor_exo_cs","rarity":"legendary","rarityName":"Легендарный","type":"armor","name":"Экзоскелет «Чистое Небо»","icon":"🤖","def":90,"maxHp":220,"price":16000,"desc":"Высокая биологическая и пси-защита учёных (+90 Броня)"},
+    "armor_exo_bandit":{"id":"armor_exo_bandit","rarity":"legendary","rarityName":"Легендарный","type":"armor","name":"Экзоскелет Пахана","icon":"🤖","def":88,"maxHp":210,"price":15000,"desc":"Кустарно усиленный тяжёлый экзоскелет авторитетов (+88 Броня)"},
+    "armor_exo_stalker":{"id":"armor_exo_stalker","rarity":"legendary","rarityName":"Легендарный","type":"armor","name":"Тяжёлый Экзоскелет «Титан»","icon":"🤖","def":105,"maxHp":280,"price":21000,"desc":"Сервоприводы третьего поколения (+105 Броня, +280 HP)"},
+    "armor_orion":{"id":"armor_orion","rarity":"mythic","rarityName":"Мифический","type":"armor","name":"Бронескафандр «Орион»","icon":"🔮","def":140,"maxHp":380,"price":48000,"desc":"Космический композит и защита от всех видов аномалий (+140 Броня)"},
+    "armor_dark_stalker":{"id":"armor_dark_stalker","rarity":"mythic","rarityName":"Мифический","type":"armor","name":"Плащ Тёмного Сталкера","icon":"🌌","def":160,"maxHp":420,"price":65000,"desc":"Скрывает владельца в тенях Ноосферы (+160 Броня, +420 HP)"},
 
-    "art_droplets":{id:"art_droplets",rarity:"uncommon",type:"artifact",name:"Капли",icon:"💧",bonusDef:2,bonusHp:15,price:420,desc:"Слабый лечебный артефакт"},
-    "art_medusa":{id:"art_medusa",rarity:"uncommon",type:"artifact",name:"Медуза",icon:"🪨",bonusDef:5,bonusHp:25,price:750,desc:"Создаёт защитное поле"},
-    "art_flash":{id:"art_flash",rarity:"rare",type:"artifact",name:"Вспышка",icon:"✨",bonusAtk:8,bonusDef:4,price:1500,desc:"Увеличивает урон сталкера"},
-    "art_gravi":{id:"art_gravi",rarity:"rare",type:"artifact",name:"Грави",icon:"🌀",bonusDef:12,bonusHp:50,price:2400,desc:"Искажает траекторию пуль"},
-    "art_soul":{id:"art_soul",rarity:"epic",type:"artifact",name:"Душа",icon:"💚",bonusDef:10,bonusHp:120,price:5000,desc:"Мощно ускоряет регенерацию"},
-    "art_firefly":{id:"art_firefly",rarity:"legendary",type:"artifact",name:"Светляк",icon:"🌟",bonusAtk:25,bonusDef:20,bonusHp:180,price:14000,desc:"Легендарный регенерирующий артефакт"},
-    "art_heart_zone":{id:"art_heart_zone",rarity:"mythic",type:"artifact",name:"Сердце Зоны",icon:"💎",bonusAtk:50,bonusDef:45,bonusHp:350,price:50000,desc:"Сгусток чистой энергии Зоны"},
+    "art_thorn":{"id":"art_thorn","rarity":"common","rarityName":"Обычный","type":"artifact","name":"«Колючка»","icon":"🦔","bonus":{"def":5},"price":450,"desc":"Шипастый аномальный нарост (+5 Броня)"},
+    "art_slime":{"id":"art_slime","rarity":"common","rarityName":"Обычный","type":"artifact","name":"«Слизь»","icon":"🟢","bonus":{"hp":15},"price":550,"desc":"Холодная студенистая масса (+15 HP)"},
+    "art_droplet":{"id":"art_droplet","rarity":"uncommon","rarityName":"Необычный","type":"artifact","name":"«Капля»","icon":"💧","bonus":{"def":8,"hp":25},"price":950,"desc":"Слеза гравитационной аномалии (+8 Броня, +25 HP)"},
+    "art_sparkler":{"id":"art_sparkler","rarity":"uncommon","rarityName":"Необычный","type":"artifact","name":"«Бенгальский огонь»","icon":"✨","bonus":{"atk":10},"price":1100,"desc":"Искрится зарядами статики (+10 Атака)"},
+    "art_medusa":{"id":"art_medusa","rarity":"rare","rarityName":"Редкий","type":"artifact","name":"«Медуза»","icon":"🪨","bonus":{"def":16,"hp":40},"price":2200,"desc":"Поглощает кинетическую энергию пуль (+16 Броня, +40 HP)"},
+    "art_stone_flower":{"id":"art_stone_flower","rarity":"rare","rarityName":"Редкий","type":"artifact","name":"«Каменный цветок»","icon":"🌸","bonus":{"def":20,"hp":50},"price":2600,"desc":"Окаменевшая гравитационная волна (+20 Броня, +50 HP)"},
+    "art_flash":{"id":"art_flash","rarity":"rare","rarityName":"Редкий","type":"artifact","name":"«Вспышка»","icon":"⚡","bonus":{"atk":18,"def":8},"price":3100,"desc":"Накапливает электроразряды (+18 Атака, +8 Броня)"},
+    "art_fireball":{"id":"art_fireball","rarity":"rare","rarityName":"Редкий","type":"artifact","name":"«Огненный шар»","icon":"🔥","bonus":{"def":22,"atk":14},"price":3500,"desc":"Термическая аномалия греет кровь (+22 Броня, +14 Атака)"},
+    "art_gravi":{"id":"art_gravi","rarity":"epic","rarityName":"Эпический","type":"artifact","name":"«Грави»","icon":"🌀","bonus":{"atk":26,"def":18},"price":5800,"desc":"Усиливает мускульную силу носителя (+26 Атака, +18 Броня)"},
+    "art_crystal":{"id":"art_crystal","rarity":"epic","rarityName":"Эпический","type":"artifact","name":"«Кристалл»","icon":"💎","bonus":{"def":32,"hp":90},"price":6500,"desc":"Поглощает излучение и удары (+32 Броня, +90 HP)"},
+    "art_goldfish":{"id":"art_goldfish","rarity":"epic","rarityName":"Эпический","type":"artifact","name":"«Золотая рыбка»","icon":"🐟","bonus":{"def":38,"hp":110},"price":7900,"desc":"Гравитационный щит высшего ранга (+38 Броня, +110 HP)"},
+    "art_moonlight":{"id":"art_moonlight","rarity":"epic","rarityName":"Эпический","type":"artifact","name":"«Лунный свет»","icon":"🌙","bonus":{"atk":30,"def":24},"price":8400,"desc":"Невероятный прилив сил (+30 Атака, +24 Броня)"},
+    "art_compass":{"id":"art_compass","rarity":"legendary","rarityName":"Легендарный","type":"artifact","name":"«Компас»","icon":"🧭","bonus":{"atk":45,"def":45},"price":18000,"desc":"Указывает тропы сквозь аномалии (+45 Атака, +45 Броня)"},
+    "art_heart":{"id":"art_heart","rarity":"legendary","rarityName":"Легендарный","type":"artifact","name":"«Сердце Чернобыля»","icon":"❤️","bonus":{"hp":220,"def":60},"price":24000,"desc":"Пульсирующее ядро Саркофага (+220 HP, +60 Броня)"},
+    "art_wishgranter":{"id":"art_wishgranter","rarity":"legendary","rarityName":"Легендарный","type":"artifact","name":"«Осколок Монолита»","icon":"🔮","bonus":{"atk":65,"def":65,"hp":180},"price":29000,"desc":"Осколок кристалла ЧАЭС (+65 Атака, +65 Броня, +180 HP)"},
+    "art_eye_noosphere":{"id":"art_eye_noosphere","rarity":"mythic","rarityName":"Мифический","type":"artifact","name":"«Око Ноосферы»","icon":"👁️","bonus":{"atk":95,"def":85,"hp":250},"price":60000,"desc":"Всеведение и неуязвимость (+95 Атака, +85 Броня, +250 HP)"},
+    "art_singularity_core":{"id":"art_singularity_core","rarity":"mythic","rarityName":"Мифический","type":"artifact","name":"«Сфера Сингулярности»","icon":"🌌","bonus":{"atk":120,"def":110,"hp":320},"price":85000,"desc":"Искажает законы пространства (+120 Атака, +110 Броня, +320 HP)"},
 
-    "bandage":{id:"bandage",rarity:"common",type:"med",name:"Бинт",icon:"🩹",heal:25,rad:-2,price:25,desc:"Останавливает кровотечение"},
-    "medkit_basic":{id:"medkit_basic",rarity:"common",type:"med",name:"Аптечка",icon:"💊",heal:60,rad:-5,price:75,desc:"Восстанавливает здоровье"},
-    "medkit_army":{id:"medkit_army",rarity:"rare",type:"med",name:"Армейская аптечка",icon:"💉",heal:120,rad:-15,price:190,desc:"Профессиональный медкомплект"},
-    "antirad":{id:"antirad",rarity:"uncommon",type:"med",name:"Антирад",icon:"🧪",rad:-40,price:110,desc:"Выводит токсины радиации"},
-
-    "bread":{id:"bread",rarity:"common",type:"food",name:"Батон хлеба",icon:"🍞",hunger:35,price:20,desc:"Простой сытный перекус"},
-    "canned_meat":{id:"canned_meat",rarity:"common",type:"food",name:"Тушёнка",icon:"🥫",hunger:70,price:55,desc:"Калорийное армейское мясо"},
-    "water_flask":{id:"water_flask",rarity:"common",type:"water",name:"Фляга воды",icon:"💧",thirst:45,price:20,desc:"Чистая питьевая вода"},
-    "mineral_water":{id:"mineral_water",rarity:"uncommon",type:"water",name:"Минеральная вода",icon:"🍾",thirst:80,price:50,desc:"Освежающая вода Зоны"},
-    "energy_drink":{id:"energy_drink",rarity:"uncommon",type:"energy",name:"Энергетик «Non-Stop»",icon:"⚡",energy:50,thirst:25,price:65,desc:"Мгновенно восстанавливает энергию"}
+    "med_bandage":{"id":"med_bandage","rarity":"common","rarityName":"Обычный","type":"med","name":"Стерильный бинт","icon":"🩹","heal":25,"price":30,"desc":"Останавливает кровотечение (+25 HP)"},
+    "med_kit":{"id":"med_kit","rarity":"common","rarityName":"Обычный","type":"med","name":"Аптечка первой помощи","icon":"💊","heal":60,"price":85,"desc":"Базовый полевой набор медикаментов (+60 HP)"},
+    "med_army":{"id":"med_army","rarity":"rare","rarityName":"Редкий","type":"med","name":"Военная аптечка АИ-2","icon":"💉","heal":130,"rad":-15,"price":220,"desc":"Стимуляторы и перевязочные средства (+130 HP, -15 Рад)"},
+    "med_antirad":{"id":"med_antirad","rarity":"uncommon","rarityName":"Необычный","type":"med","name":"Препарат «Антирад»","icon":"🧪","rad":-45,"price":130,"desc":"Быстро выводит радиацию из организма (-45 мЗв)"},
+    "item_bread":{"id":"item_bread","rarity":"common","rarityName":"Обычный","type":"food","name":"Батон хлеба","icon":"🥖","hunger":40,"price":40,"desc":"Свежий белый хлеб (+40% Сытости)"},
+    "item_crackers":{"id":"item_crackers","rarity":"common","rarityName":"Обычный","type":"food","name":"Армейские сухари","icon":"🍞","hunger":25,"price":25,"desc":"Питательные сухари (+25% Сытости)"},
+    "item_canned_fish":{"id":"item_canned_fish","rarity":"common","rarityName":"Обычный","type":"food","name":"Рыбные консервы «Килька»","icon":"🐟","hunger":55,"price":65,"desc":"Калорийная консервация (+55% Сытости)"},
+    "item_sausage":{"id":"item_sausage","rarity":"common","rarityName":"Обычный","type":"food","name":"Колбаса «Диетическая»","icon":"🌭","hunger":65,"price":75,"desc":"Копчёная сталкерская колбаса (+65% Сытости)"},
+    "item_water":{"id":"item_water","rarity":"common","rarityName":"Обычный","type":"water","name":"Фляга чистой воды","icon":"💧","thirst":45,"price":35,"desc":"Чистая родниковая вода (+45% Жажды)"},
+    "item_canteen":{"id":"item_canteen","rarity":"uncommon","rarityName":"Необычный","type":"water","name":"Армейская фляжка с водой","icon":"🍶","thirst":80,"price":70,"desc":"Большой запас фильтрованной воды (+80% Жажды)"},
+    "item_energy":{"id":"item_energy","rarity":"uncommon","rarityName":"Необычный","type":"energy","name":"Энергетик «Non-Stop»","icon":"⚡","energy":50,"thirst":30,"price":80,"desc":"Мгновенно восстанавливает 50⚡ энергии"}
   },
 
-  locations:[
-    {id:"loc_village",name:"Деревня новичков",minLevel:1,energy:5,gramChance:0.012,danger:"Безопасная",desc:"Уютный лагерь сталкеров, костёр и гитара.",enemies:["blind_dog","flesh"],loot:["knife_rusty","bread","water_flask","bandage"]},
-    {id:"loc_cordon",name:"Окрестности Кордона",minLevel:2,energy:6,gramChance:0.015,danger:"Низкая",desc:"Ж/д насыпь, бродячие псы и патрули.",enemies:["blind_dog","boar_young","bandit_novice"],loot:["bandage","bread","pistol_pm","water_flask"]},
-    {id:"loc_city_ruins",name:"Заброшенный город",minLevel:4,energy:7,gramChance:0.018,danger:"Низкая",desc:"Разрушенные хрущёвки, мародёры и слепые псы.",enemies:["bandit_novice","blind_dog","flesh"],loot:["pistol_pm","medkit_basic","bread"]},
-    {id:"loc_post",name:"Южный Блокпост",minLevel:6,energy:8,gramChance:0.022,danger:"Средняя",desc:"Военные заграждения и колючая проволока.",enemies:["bandit_experienced","flesh","boar_young"],loot:["pistol_tt","canned_meat","bandage"]},
-    {id:"loc_swamp",name:"Гнилые Болота",minLevel:8,energy:9,gramChance:0.025,danger:"Средняя",desc:"Радиоактивная топь, туман и камыши.",enemies:["snork","boar_young","blind_dog"],loot:["art_droplets","water_flask","antirad"]},
-    {id:"loc_dump",name:"Свалка старой техники",minLevel:11,energy:10,gramChance:0.030,danger:"Средняя",desc:"Горы ржавого железа и бандитские засады.",enemies:["bandit_experienced","snork","boar_wild"],loot:["shotgun_sawn","jacket_bandit","energy_drink"]},
-    {id:"loc_dump_depo",name:"Свалка: Заброшенное Депо",minLevel:14,energy:12,gramChance:0.035,danger:"Опасная",desc:"Главное логово рейдеров и мародёров.",enemies:["bandit_veteran","boar_wild"],loot:["smg_viper","suit_stalker","medkit_basic"]},
-    {id:"loc_dark_valley",name:"Тёмная Лощина",minLevel:17,energy:14,gramChance:0.040,danger:"Опасная",desc:"Мрачное ущелье, вой мутантов и аномалии.",enemies:["bloodsucker","bandit_veteran","pseudodog"],loot:["art_medusa","canned_meat","antirad"]},
-    {id:"loc_rostok",name:"Завод «Росток»",minLevel:20,energy:15,gramChance:0.045,danger:"Опасная",desc:"Заброшенные цеха, завалы и дикие псы.",enemies:["pseudodog","snork","bandit_veteran"],loot:["rifle_ak74","suit_stalker","medkit_army"]},
-    {id:"loc_wild_territory",name:"Дикая Территория",minLevel:24,energy:16,gramChance:0.050,danger:"Высокая",desc:"Снайперы наёмников и логова кровососов.",enemies:["merc_veteran","bloodsucker"],loot:["rifle_ak74","art_flash","antirad"]},
-    {id:"loc_agroprom",name:"НИИ «Агропром»",minLevel:28,energy:18,gramChance:0.055,danger:"Высокая",desc:"Корпуса института и военные патрули.",enemies:["military_spetsnaz","snork"],loot:["shotgun_spas12","suit_dolg","medkit_army"]},
-    {id:"underground",name:"Подземелья Агропрома",minLevel:32,energy:20,gramChance:0.060,danger:"Высокая",desc:"Тёмные туннели, вой и пси-излучение контролёра.",enemies:["bloodsucker","controller_young"],loot:["art_gravi","medkit_army","antirad"]},
-    {id:"loc_bar",name:"Бар «100 рентген»",minLevel:36,energy:20,gramChance:0.065,danger:"Особая",desc:"Окрестности Бара под охраной «Долга».",enemies:["pseudodog","merc_veteran"],loot:["rifle_ak74","suit_dolg","energy_drink"]},
-    {id:"loc_yantar",name:"Озеро Янтарь: Бункер",minLevel:40,energy:22,gramChance:0.070,danger:"Высокая",desc:"Высохшее озеро, зомбированные и лаборатория Сахарова.",enemies:["zombie_stalker","controller_young","snork"],loot:["suit_seva","art_soul","medkit_army"]},
-    {id:"loc_lab16",name:"Лаборатория X-16",minLevel:45,energy:24,gramChance:0.078,danger:"Экстремальная",desc:"Подземный пси-излучатель и биологический мозг.",enemies:["controller_master","burer","zombie_stalker"],loot:["suit_seva","art_soul","medkit_army"]},
-    {id:"loc_military",name:"Армейские Склады",minLevel:50,energy:25,gramChance:0.085,danger:"Высокая",desc:"База группировки «Свобода» и пограничье.",enemies:["monolith_fighter","bloodsucker"],loot:["rifle_vintorez","art_flash","suit_skat"]},
-    {id:"loc_barrier",name:"Барьер: Оборона от «Монолита»",minLevel:55,energy:27,gramChance:0.092,danger:"Экстремальная",desc:"Окопы, непрерывные штурмы фанатиков.",enemies:["monolith_fighter","pseudogiant"],loot:["heavy_pkm","suit_skat","medkit_army"]},
-    {id:"loc_lab18",name:"Лаборатория X-18",minLevel:60,energy:28,gramChance:0.100,danger:"Экстремальная",desc:"Гермодвери, полтергейсты и секретные колбы.",enemies:["burer","controller_master"],loot:["art_firefly","heavy_pkm","medkit_army"]},
-    {id:"loc_red_forest",name:"Рыжий Лес",minLevel:65,energy:30,gramChance:0.110,danger:"Смертельная",desc:"Аномальная чаща, мутанты и пространственные пузыри.",enemies:["chimera","pseudogiant"],loot:["art_firefly","suit_exoskeleton","antirad"]},
-    {id:"loc_limansk",name:"Лиманск: Госпиталь",minLevel:70,energy:32,gramChance:0.120,danger:"Смертельная",desc:"Уличные городские бои, пулемётные гнёзда.",enemies:["monolith_veteran","chimera"],loot:["rifle_vintorez","gauss_rifle","suit_exoskeleton"]},
-    {id:"loc_deadcity",name:"Мёртвый Город: База Синдиката",minLevel:74,energy:34,gramChance:0.130,danger:"Смертельная",desc:"Укреплённый штаб элитных наёмников.",enemies:["merc_master","monolith_veteran"],loot:["gauss_rifle","suit_exoskeleton","medkit_army"]},
-    {id:"loc_radar",name:"Радар: Выжигатель мозгов",minLevel:78,energy:36,gramChance:0.140,danger:"Смертельная",desc:"Гигантские антенны, подавляющие разум сталкеров.",enemies:["monolith_veteran","controller_master"],loot:["art_firefly","gauss_rifle","medkit_army"]},
-    {id:"loc_zaton",name:"Затон и «Скадовск»",minLevel:82,energy:38,gramChance:0.150,danger:"Высокая",desc:"Северные топи и сухогруз сталкеров.",enemies:["chimera","burer","merc_master"],loot:["suit_exoskeleton","art_heart_zone","heavy_pkm"]},
-    {id:"loc_pripyat",name:"Мёртвый город Припять",minLevel:85,energy:40,gramChance:0.165,danger:"Смертельная",desc:"Колесо обозрения, гостиница «Полесье» и культ Монолита.",enemies:["monolith_master","chimera","pseudogiant"],loot:["gauss_rifle","fn2000_proto","art_heart_zone"]},
-    {id:"loc_jupiter",name:"Окрестности «Юпитера»",minLevel:88,energy:42,gramChance:0.180,danger:"Смертельная",desc:"Заводские ангары, градирня и карьерный экскаватор.",enemies:["monolith_master","chimera"],loot:["fn2000_proto","suit_monolith_x","art_heart_zone"]},
-    {id:"loc_chaes",name:"ЧАЭС: Саркофаг и Ядро",minLevel:90,energy:45,gramChance:0.200,danger:"Катастрофическая",desc:"Эпицентр Второго Взрыва. Радиация зашкаливает.",enemies:["monolith_avatar","monolith_master"],loot:["fn2000_proto","suit_monolith_x","art_heart_zone"]},
-    {id:"loc_sarcophagus",name:"Саркофаг: Исполнитель Желаний",minLevel:92,energy:48,gramChance:0.220,danger:"Катастрофическая",desc:"Мистический кристалл в недрах четвёртого энергоблока.",enemies:["monolith_avatar"],loot:["fn2000_proto","suit_monolith_x","art_heart_zone"]},
-    {id:"loc_generators",name:"Генераторы Ноосферы",minLevel:95,energy:50,gramChance:0.250,danger:"Абсолютная",desc:"Тайная лаборатория О-Сознания на краю Земли.",enemies:["monolith_avatar"],loot:["fn2000_proto","suit_monolith_x","art_heart_zone"]}
+  locations: [
+    {"id":"loc_kordon_village","name":"Кордон: Деревня Новичков","dangerText":"Безопасная","dangerColor":"#2ecc71","minLevel":1,"energyCost":5,"gramcoinChance":0.005,"gramStr":"0.5%","desc":"Убежище зелёных сталкеров, костёр, гитара и первые простые вылазки.","enemies":["rat","dog"],"loot":["med_bandage","knife_rusty","item_water","item_bread"]},
+    {"id":"loc_kordon_post","name":"Кордон: Южный Блокпост","dangerText":"Низкая","dangerColor":"#2ed573","minLevel":3,"energyCost":6,"gramcoinChance":0.007,"gramStr":"0.7%","desc":"Военные патрули, пулемётные вышки и контрабандные тропы.","enemies":["dog","flesh"],"loot":["pistol_pm","armor_jacket","item_canned_fish","med_kit","art_slime"]},
+    {"id":"loc_swamp_base","name":"Болота: Лагерь «Чистого Неба»","dangerText":"Умеренная","dangerColor":"#1abc9c","minLevel":5,"energyCost":7,"gramcoinChance":0.009,"gramStr":"0.9%","desc":"Топкие заводи, скрытые тропы учёных и бандитские засады в камышах.","enemies":["flesh","boar"],"loot":["pistol_tt","armor_cs_suit","art_droplet","shotgun_ij43"]},
+    {"id":"loc_dump_ruins","name":"Свалка: Горы Мусора","dangerText":"Средняя","dangerColor":"#f39c12","minLevel":8,"energyCost":8,"gramcoinChance":0.012,"gramStr":"1.2%","desc":"Кладбище радиоактивной техники, бандитские заставы и стаи слепых псов.","enemies":["bandit","dog","boar"],"loot":["shotgun_toz","med_kit","armor_trenchcoat","art_sparkler"]},
+    {"id":"loc_dump_depo","name":"Свалка: Заброшенное Депо","dangerText":"Опасная","dangerColor":"#e67e22","minLevel":11,"energyCost":9,"gramcoinChance":0.015,"gramStr":"1.5%","desc":"Главный ангар Свалки, укреплённый лагерь бандитских авторитетов.","enemies":["bandit","snork"],"loot":["smg_viper","armor_stalker","art_medusa","item_sausage"]},
+    {"id":"loc_agro_research","name":"НИИ «Агропром»: Комплекс","dangerText":"Опасная","dangerColor":"#e67e22","minLevel":15,"energyCost":10,"gramcoinChance":0.02,"gramStr":"2.0%","desc":"Заброшенные НИИ, архивные секретные документы и армейский спецназ.","enemies":["military","snork"],"loot":["rifle_ak74","armor_combat_cuirass","med_army","art_stone_flower"]},
+    {"id":"loc_agro_underground","name":"Подземелья Агропрома","dangerText":"Высокая","dangerColor":"#d35400","minLevel":19,"energyCost":11,"gramcoinChance":0.025,"gramStr":"2.5%","desc":"Затопленные винтовые лестницы, логово кровососа и шёпот первого контролёра.","enemies":["bloodsucker","snork"],"loot":["rifle_abakan","armor_rad_suit","art_flash","med_antirad"]},
+    {"id":"loc_dark_valley","name":"Тёмная Долина: База Борова","dangerText":"Высокая","dangerColor":"#d35400","minLevel":23,"energyCost":12,"gramcoinChance":0.03,"gramStr":"3.0%","desc":"Мрачная недостроенная фабрика, бандитские пыточные и тайные подвалы.","enemies":["bandit_veteran","bloodsucker"],"loot":["shotgun_spas12","armor_freedom_wind","art_fireball"]},
+    {"id":"loc_lab_x18","name":"Лаборатория X-18","dangerText":"Критическая","dangerColor":"#e74c3c","minLevel":27,"energyCost":13,"gramcoinChance":0.035,"gramStr":"3.5%","desc":"Подземный бункер экспериментов, летающие ящики полтергейста и мутанты в колбах.","enemies":["burer","bloodsucker"],"loot":["rifle_val","armor_seva","art_gravi","med_army"]},
+    {"id":"loc_bar_100","name":"Бар «100 Рентген» и Завод «Росток»","dangerText":"Умеренная","dangerColor":"#1abc9c","minLevel":31,"energyCost":14,"gramcoinChance":0.04,"gramStr":"4.0%","desc":"Штаб группировки «Долг», Арена сталкеров и убежище от смертельных выбросов.","enemies":["pseudodog","bandit_veteran"],"loot":["rifle_lr300","armor_combat_cuirass","item_energy"]},
+    {"id":"loc_wild_territory","name":"Дикая Территория: Станция","dangerText":"Высокая","dangerColor":"#d35400","minLevel":35,"energyCost":15,"gramcoinChance":0.045,"gramStr":"4.5%","desc":"Разбитые вертолёты, снайперские вышки наёмников и стаи псевдособак.","enemies":["merc","pseudodog"],"loot":["rifle_g36","armor_merc_suit","art_crystal"]},
+    {"id":"loc_yantar_bunker","name":"Озеро Янтарь: Бункер Учёных","dangerText":"Опасная","dangerColor":"#e67e22","minLevel":39,"energyCost":16,"gramcoinChance":0.05,"gramStr":"5.0%","desc":"Герметичный мобильный лагерь профессора Сахарова среди пси-болот.","enemies":["zombie","snork"],"loot":["sniper_svd","armor_seva","art_goldfish"]},
+    {"id":"loc_lab_x16","name":"Лаборатория X-16","dangerText":"Критическая","dangerColor":"#e74c3c","minLevel":43,"energyCost":17,"gramcoinChance":0.055,"gramStr":"5.5%","desc":"Гигантский пульсирующий био-мозг, выводящий из строя рассудок сталкеров.","enemies":["controller","zombie"],"loot":["rifle_groza","armor_skat","art_moonlight"]},
+    {"id":"loc_military_base","name":"Армейские Склады: База «Свободы»","dangerText":"Высокая","dangerColor":"#d35400","minLevel":47,"energyCost":18,"gramcoinChance":0.06,"gramStr":"6.0%","desc":"Холмистая равнина, блокпосты анархистов и деревня кровососов в низине.","enemies":["merc","bloodsucker"],"loot":["sniper_vintorez","armor_freedom_wind","art_crystal"]},
+    {"id":"loc_barrier","name":"Барьер: Оборона от «Монолита»","dangerText":"Смертельная","dangerColor":"#c0392b","minLevel":51,"energyCost":19,"gramcoinChance":0.065,"gramStr":"6.5%","desc":"Окопы и мешки с песком. Непрекращающийся штурм фанатиков веры.","enemies":["monolith","chimera"],"loot":["heavy_pkm","armor_monolith_suit","art_compass"]},
+    {"id":"loc_dead_city","name":"Мёртвый Город: Лагерь Синдиката","dangerText":"Смертельная","dangerColor":"#c0392b","minLevel":55,"energyCost":20,"gramcoinChance":0.07,"gramStr":"7.0%","desc":"Город-призрак под контролем элитных подразделений иностранных наёмников.","enemies":["merc_veteran","chimera"],"loot":["rifle_fn2000","armor_merc_suit","art_compass"]},
+    {"id":"loc_radar_forest","name":"Рыжий Лес: Аномальная Чаща","dangerText":"Смертельная","dangerColor":"#c0392b","minLevel":59,"energyCost":21,"gramcoinChance":0.075,"gramStr":"7.5%","desc":"Красные радиоактивные сосны, пространственные пузыри и рычание химер.","enemies":["chimera","pseudogiant"],"loot":["sniper_vykhlop","armor_exo_cs","art_heart"]},
+    {"id":"loc_radar_brain","name":"Радар: «Выжигатель Мозгов»","dangerText":"Катастрофическая","dangerColor":"#8e44ad","minLevel":63,"energyCost":22,"gramcoinChance":0.08,"gramStr":"8.0%","desc":"Комплекс гигантских антенн излучателя, превращающий смельчаков в зомби.","enemies":["monolith_veteran","controller_master"],"loot":["gun_gauss","armor_exo_stalker","art_wishgranter"]},
+    {"id":"loc_lab_x10","name":"Бункер Управления X-10","dangerText":"Катастрофическая","dangerColor":"#8e44ad","minLevel":67,"energyCost":23,"gramcoinChance":0.085,"gramStr":"8.5%","desc":"Рубильник отключения антенн под охраной элиты Монолита.","enemies":["monolith_veteran","burer"],"loot":["gun_rg6","armor_exo_stalker","art_wishgranter"]},
+    {"id":"loc_pripyat_suburbs","name":"Припять: Аллеи и Стадион","dangerText":"Катастрофическая","dangerColor":"#8e44ad","minLevel":71,"energyCost":24,"gramcoinChance":0.09,"gramStr":"9.0%","desc":"Заброшенные девятиэтажки, колесо обозрения и пулемётные гнёзда Монолита.","enemies":["monolith_veteran","pseudogiant"],"loot":["gun_rpg","armor_orion","art_eye_noosphere"]},
+    {"id":"loc_pripyat_hotel","name":"Гостиница «Полесье» и ДК «Энергетик»","dangerText":"Катастрофическая","dangerColor":"#8e44ad","minLevel":75,"energyCost":25,"gramcoinChance":0.095,"gramStr":"9.5%","desc":"Тайники легендарных сталкеров и засады жрецов кристалла.","enemies":["monolith_veteran","chimera"],"loot":["knife_noosphere","armor_orion","art_eye_noosphere"]},
+    {"id":"loc_chaes_gates","name":"ЧАЭС: Врата Четвёртого Энергоблока","dangerText":"Апокалипсис","dangerColor":"#9b59b6","minLevel":79,"energyCost":26,"gramcoinChance":0.1,"gramStr":"10.0%","desc":"Свинцовые плиты, смертельные дозы рентген и непрерывная война группировок.","enemies":["monolith_master","pseudogiant"],"loot":["gun_railgun","armor_dark_stalker","art_singularity_core"]},
+    {"id":"loc_sarcophagus","name":"Саркофаг: Зал Исполнителя Желаний","dangerText":"Апокалипсис","dangerColor":"#9b59b6","minLevel":83,"energyCost":27,"gramcoinChance":0.105,"gramStr":"10.5%","desc":"Мистический светящийся кристалл Монолита, исполняющий сокровенные желания.","enemies":["monolith_master","controller_master"],"loot":["gun_monolith_wrath","armor_dark_stalker","art_singularity_core"]},
+    {"id":"loc_control_bunker","name":"Тайный Бункер «О-Сознания»","dangerText":"Апокалипсис","dangerColor":"#9b59b6","minLevel":87,"energyCost":28,"gramcoinChance":0.11,"gramStr":"11.0%","desc":"Капсулы учёных, соединивших разум с Ноосферой и породивших Зону.","enemies":["monolith_master"],"loot":["gun_singularity","armor_dark_stalker","art_singularity_core"]},
+    {"id":"loc_generators","name":"Генераторы: Поле Ноосферы","dangerText":"Апокалипсис","dangerColor":"#9b59b6","minLevel":91,"energyCost":29,"gramcoinChance":0.115,"gramStr":"11.5%","desc":"Шесть металлических сфер, формирующих купол Зоны Отчуждения.","enemies":["monolith_master"],"loot":["gun_singularity","armor_dark_stalker","art_singularity_core"]},
+    {"id":"loc_zaton_ship","name":"Север: Затон и Сухогруз «Скадовск»","dangerText":"Опасная","dangerColor":"#e67e22","minLevel":93,"energyCost":30,"gramcoinChance":0.12,"gramStr":"12.0%","desc":"Ржавое судно посреди высохшего русла реки — мирный привал вольных бродяг.","enemies":["bandit_veteran","chimera"],"loot":["gun_railgun","armor_orion","art_singularity_core"]},
+    {"id":"loc_jupiter_factory","name":"Север: Завод «Юпитер» и Карьер","dangerText":"Смертельная","dangerColor":"#c0392b","minLevel":95,"energyCost":31,"gramcoinChance":0.125,"gramStr":"12.5%","desc":"Огромные цеха секретного оборонного завода и гигантский карьерный экскаватор.","enemies":["pseudogiant","monolith_master"],"loot":["gun_singularity","armor_dark_stalker","art_singularity_core"]},
+    {"id":"loc_pripyat_underpass","name":"Путепровод «Припять-1»","dangerText":"Катастрофическая","dangerColor":"#8e44ad","minLevel":97,"energyCost":32,"gramcoinChance":0.13,"gramStr":"13.0%","desc":"Герметичный транспортный тоннель, заполненный токсичным газом и мутантами.","enemies":["snork","burer","chimera"],"loot":["gun_singularity","armor_dark_stalker","art_singularity_core"]}
   ],
 
-  enemies:{
-    "blind_dog":{name:"Слепой пёс",icon:"🐕",hp:35,dmg:[4,8],exp:30,rubles:[15,40],desc:"Одичавшая стайная собака"},
-    "flesh":{name:"Плоть",icon:"🐖",hp:45,dmg:[5,10],exp:40,rubles:[25,55],desc:"Мутировавшая свинья с прочной шкурой"},
-    "boar_young":{name:"Кабан",icon:"🐗",hp:60,dmg:[8,14],exp:60,rubles:[40,80],desc:"Агрессивный зверь с острыми клыками"},
-    "bandit_novice":{name:"Бандит-новичок",icon:"👤",hp:50,dmg:[7,12],exp:50,rubles:[35,70],desc:"Вооружён ржавым стволом"},
-    "bandit_experienced":{name:"Опытный бандит",icon:"🧥",hp:85,dmg:[12,20],exp:90,rubles:[60,120],desc:"В кожаном плаще и с обрезом"},
-    "bandit_veteran":{name:"Пахан бандитов",icon:"🧥",hp:130,dmg:[18,28],exp:140,rubles:[100,200],desc:"Главарь местной шайки"},
-    "snork":{name:"Снорк",icon:"☣️",hp:110,dmg:[16,26],exp:120,rubles:[70,140],desc:"Мутант в противогазе, прыгает на жертву"},
-    "boar_wild":{name:"Матёрый вепрь",icon:"🐗",hp:150,dmg:[22,34],exp:160,rubles:[90,170],desc:"Огромная туша с толстой кожей"},
-    "pseudodog":{name:"Псевдособака",icon:"🐺",hp:170,dmg:[26,40],exp:190,rubles:[110,210],desc:"Опасный хищник с быстрой реакцией"},
-    "bloodsucker":{name:"Кровосос",icon:"🐙",hp:230,dmg:[35,52],exp:260,rubles:[150,300],desc:"Становится невидимым перед ударом"},
-    "merc_veteran":{name:"Ветеран-наёмник",icon:"🪖",hp:260,dmg:[40,60],exp:300,rubles:[180,350],desc:"Профессионал частной военной компании"},
-    "military_spetsnaz":{name:"Спецназ ВСУ",icon:"🎖️",hp:310,dmg:[48,70],exp:360,rubles:[220,400],desc:"Оснащён армейской штурмовой бронёй"},
-    "controller_young":{name:"Пси-контролёр",icon:"🧠",hp:380,dmg:[60,85],exp:450,rubles:[280,500],desc:"Атакует разум пси-ударами"},
-    "zombie_stalker":{name:"Зомбированный",icon:"🧟",hp:280,dmg:[35,50],exp:280,rubles:[120,240],desc:"Потерявший рассудок стрелок"},
-    "burer":{name:"Бюрер",icon:"🧙",hp:460,dmg:[70,105],exp:550,rubles:[350,650],desc:"Управляет гравитационными волнами"},
-    "controller_master":{name:"Мастер-контролёр",icon:"🧠",hp:560,dmg:[85,120],exp:680,rubles:[420,800],desc:"Дробит рассудок мощной пси-волной"},
-    "pseudogiant":{name:"Псевдогигант",icon:"🦏",hp:750,dmg:[100,145],exp:850,rubles:[550,1000],desc:"Многотонный монстр, сотрясает землю"},
-    "chimera":{name:"Химера",icon:"👹",hp:680,dmg:[110,160],exp:920,rubles:[600,1100],desc:"Двуглавый сверххищник с молниеносными прыжками"},
-    "monolith_fighter":{name:"Боец «Монолита»",icon:"🗿",hp:480,dmg:[75,110],exp:580,rubles:[300,600],desc:"Фанатик веры в Исполнитель"},
-    "monolith_veteran":{name:"Ветеран «Монолита»",icon:"🗿",hp:720,dmg:[95,140],exp:820,rubles:[450,850],desc:"Закалённый боец с экзоскелетом"},
-    "merc_master":{name:"Лидер Наёмников",icon:"🎯",hp:850,dmg:[115,160],exp:1000,rubles:[600,1200],desc:"Мастер снайперского огня"},
-    "monolith_master":{name:"Инквизитор Монолита",icon:"🗿",hp:1050,dmg:[120,175],exp:1200,rubles:[750,1500],desc:"Мастер с гаусс-винтовкой"},
-    "monolith_avatar":{name:"Аватар Исполнителя",icon:"🔮",hp:1500,dmg:[155,220],exp:1800,rubles:[1000,2000],desc:"Существо из энергии Ноосферы"}
+  enemies: {
+    "rat":{"name":"Крыса-мутант","icon":"🐀","hp":25,"maxHp":25,"dmg":[4,8],"exp":15,"rubles":[20,45],"desc":"Мелкий юркий грызун"},
+    "dog":{"name":"Слепой пёс","icon":"🐕","hp":36,"maxHp":36,"dmg":[6,11],"exp":22,"rubles":[30,65],"desc":"Охотится стаями по чутью"},
+    "flesh":{"name":"Плоть-мутант","icon":"🐖","hp":50,"maxHp":50,"dmg":[8,14],"exp":30,"rubles":[45,85],"desc":"Изуродованная свинья с панцирем"},
+    "boar":{"name":"Матёрый кабан","icon":"🐗","hp":75,"maxHp":75,"dmg":[12,19],"exp":45,"rubles":[60,110],"desc":"Смертоносный таранный удар клыками"},
+    "bandit":{"name":"Бандит-налётчик","icon":"👤","hp":65,"maxHp":65,"dmg":[10,18],"exp":40,"rubles":[70,130],"desc":"Шестёрка местной группировки"},
+    "snork":{"name":"Снорк","icon":"☣️","hp":110,"maxHp":110,"dmg":[18,28],"exp":65,"rubles":[90,170],"desc":"Прыгучий мутант в противогазе"},
+    "military":{"name":"Боец спецназа ВСУ","icon":"🎖️","hp":140,"maxHp":140,"dmg":[22,34],"exp":85,"rubles":[120,220],"desc":"Обученный армейский стрелок"},
+    "bloodsucker":{"name":"Кровосос","icon":"🐙","hp":190,"maxHp":190,"dmg":[30,46],"exp":120,"rubles":[160,300],"desc":"Невидимый хищник ночных болот"},
+    "pseudodog":{"name":"Псевдособака","icon":"🐺","hp":160,"maxHp":160,"dmg":[25,38],"exp":95,"rubles":[130,240],"desc":"Опасный зверь с пси-фантомами"},
+    "bandit_veteran":{"name":"Пахан бандитов","icon":"🧥","hp":175,"maxHp":175,"dmg":[28,42],"exp":110,"rubles":[180,340],"desc":"Опытный авторитет с дробовиком"},
+    "burer":{"name":"Бюрер","icon":"🧙","hp":260,"maxHp":260,"dmg":[42,65],"exp":180,"rubles":[260,480],"desc":"Карлик с телекинетическим щитом"},
+    "controller":{"name":"Пси-Контролёр","icon":"🧠","hp":310,"maxHp":310,"dmg":[50,75],"exp":220,"rubles":[320,600],"desc":"Пробивает сознание пси-ударами"},
+    "zombie":{"name":"Зомбированный сталкер","icon":"🧟","hp":150,"maxHp":150,"dmg":[18,30],"exp":70,"rubles":[80,160],"desc":"Бывший сталкер с пустым взглядом"},
+    "merc":{"name":"Наёмник Синдиката","icon":"🪖","hp":240,"maxHp":240,"dmg":[38,58],"exp":160,"rubles":[240,450],"desc":"Профессионал частной армии"},
+    "merc_veteran":{"name":"Элитный штурмовик наёмников","icon":"🎯","hp":380,"maxHp":380,"dmg":[60,88],"exp":260,"rubles":[400,750],"desc":"Ветеран со снайперской винтовкой"},
+    "pseudogiant":{"name":"Псевдогигант","icon":"🦏","hp":550,"maxHp":550,"dmg":[85,125],"exp":380,"rubles":[600,1100],"desc":"Многотонный исполин, сотрясающий землю"},
+    "chimera":{"name":"Химера","icon":"👹","hp":480,"maxHp":480,"dmg":[75,110],"exp":320,"rubles":[500,950],"desc":"Двуглавый сверххищник ночной чащи"},
+    "monolith":{"name":"Адепт «Монолита»","icon":"🗿","hp":340,"maxHp":340,"dmg":[55,82],"exp":240,"rubles":[350,650],"desc":"Фанатик, не чувствующий страха и боли"},
+    "monolith_veteran":{"name":"Мастер «Монолита» в экзоскелете","icon":"🗿","hp":650,"maxHp":650,"dmg":[100,150],"exp":480,"rubles":[800,1500],"desc":"Элитный защитник Саркофага"},
+    "controller_master":{"name":"Верховный Контролёр Зоны","icon":"🔮","hp":850,"maxHp":850,"dmg":[130,190],"exp":650,"rubles":[1200,2200],"desc":"Древний телепат лабораторий X"}
   },
 
-  traderCatalog:["bread","water_flask","canned_meat","mineral_water","energy_drink","bandage","medkit_basic","antirad","knife_rusty","pistol_pm","pistol_tt","shotgun_sawn","jacket_leather","jacket_bandit","suit_stalker","art_droplets","art_medusa"],
-
-  stalkers:[
-    {name:"Стрелок",title:"Легенда Зоны",level:92,rubles:285400,gram:28.4,kills:1240,avatar:"🏆",weapon:"gauss_rifle",armor:"suit_exoskeleton",artifact:"art_firefly"},
-    {name:"Шрам",title:"Ветеран-наёмник",level:85,rubles:194200,gram:22.1,kills:980,avatar:"🎯",weapon:"rifle_vintorez",armor:"suit_skat",artifact:"art_soul"},
-    {name:"Дегтярёв",title:"Мастер СБУ",level:78,rubles:142000,gram:17.5,kills:760,avatar:"🎖️",weapon:"heavy_pkm",armor:"suit_seva",artifact:"art_gravi"},
-    {name:"Призрак",title:"Снайпер Зоны",level:71,rubles:98600,gram:14.2,kills:620,avatar:"👻",weapon:"rifle_vintorez",armor:"suit_dolg",artifact:"art_flash"},
-    {name:"Клык",title:"Охотник на химер",level:64,rubles:76400,gram:11.8,kills:510,avatar:"🐺",weapon:"shotgun_spas12",armor:"suit_dolg",artifact:"art_flash"},
-    {name:"Волк",title:"Наставник Кордона",level:52,rubles:45000,gram:8.2,kills:380,avatar:"🌲",weapon:"rifle_ak74",armor:"suit_stalker",artifact:"art_medusa"},
-    {name:"Фантом_99",title:"Опытный бродяга",level:43,rubles:31200,gram:6.5,kills:290,avatar:"⚡",weapon:"rifle_ak74",armor:"suit_stalker",artifact:"art_medusa"},
-    {name:"Лис",title:"Бывалый сталкер",level:31,rubles:18400,gram:4.1,kills:180,avatar:"🦊",weapon:"smg_viper",armor:"jacket_bandit",artifact:"art_droplets"},
-    {name:"Юрик",title:"Новичок Свалки",level:15,rubles:6200,gram:1.8,kills:65,avatar:"🎒",weapon:"shotgun_sawn",armor:"jacket_leather",artifact:"art_droplets"}
+  quests: [
+    {"id":"q1","title":"Боевое крещение","desc":"Уничтожьте 3 любых мутантов в Зоне","type":"kills","target":3,"reward":{"rubles":400,"exp":100,"gram":0.2}},
+    {"id":"q2","title":"Сбор хабара","desc":"Совершите 5 успешных вылазок","type":"searches","target":5,"reward":{"rubles":500,"exp":140,"gram":0.25}},
+    {"id":"q3","title":"Охота на болотных тварей","desc":"Уничтожьте 6 противников","type":"kills","target":6,"reward":{"rubles":800,"exp":220,"gram":0.35}},
+    {"id":"q4","title":"Опытный сталкер","desc":"Совершите 12 успешных вылазок","type":"searches","target":12,"reward":{"rubles":1200,"exp":350,"gram":0.5}},
+    {"id":"q5","title":"Поиск аномалий","desc":"Добудьте хотя бы 1 артефакт","type":"arts","target":1,"reward":{"rubles":1500,"exp":400,"gram":0.6}}
   ],
 
-  achievements:[
-    {id:"ach_searches_5",title:"Первый хабар",desc:"Совершите 5 успешных вылазок",check:s=>s.tracker.searches>=5,reward:{rubles:60,exp:80,gram:0.15}},
-    {id:"ach_searches_25",title:"Следопыт Зоны",desc:"Совершите 25 вылазок в секторы",check:s=>s.tracker.searches>=25,reward:{rubles:250,exp:400,gram:0.40}},
-    {id:"ach_searches_100",title:"Хозяин троп",desc:"Совершите 100 вылазок",check:s=>s.tracker.searches>=100,reward:{rubles:1500,exp:2500,gram:1.50}},
-    {id:"ach_kills_5",title:"Первая кровь",desc:"Уничтожьте 5 мутантов или врагов",check:s=>s.tracker.kills>=5,reward:{rubles:80,exp:100,gram:0.20}},
-    {id:"ach_kills_30",title:"Истребитель тварей",desc:"Уничтожьте 30 противников",check:s=>s.tracker.kills>=30,reward:{rubles:500,exp:800,gram:0.60}},
-    {id:"ach_kills_100",title:"Гроза Зоны",desc:"Уничтожьте 100 врагов в бою",check:s=>s.tracker.kills>=100,reward:{rubles:2500,exp:4000,gram:2.00}},
-    {id:"ach_level_5",title:"Бывалый боец",desc:"Достигните 5 уровня",check:s=>s.level>=5,reward:{rubles:120,exp:150,gram:0.25}},
-    {id:"ach_level_15",title:"Ветеран Кордона",desc:"Достигните 15 уровня",check:s=>s.level>=15,reward:{rubles:800,exp:1200,gram:0.80}},
-    {id:"ach_level_30",title:"Мастер Зоны",desc:"Достигните 30 уровня",check:s=>s.level>=30,reward:{rubles:3000,exp:5000,gram:2.50}},
-    {id:"ach_gram_1",title:"Первый Gramcoin",desc:"Заработайте хотя бы 0.50 GRAM",check:s=>s.tracker.totalGramEarned>=0.5,reward:{rubles:200,exp:300,gram:0.30}}
+  achievements: [
+    {id:"a1",title:"Первая кровь",desc:"Уничтожить 1 мутанта",check:s => s.tracker.kills >= 1,reward:{"rubles": 300, "exp": 80, "gram": 0.1}},
+    {id:"a2",title:"Опытный ходок",desc:"Совершить 10 вылазок",check:s => s.tracker.searches >= 10,reward:{"rubles": 500, "exp": 120, "gram": 0.2}},
+    {id:"a3",title:"Гроза мутантов",desc:"Уничтожить 25 противников",check:s => s.tracker.kills >= 25,reward:{"rubles": 1500, "exp": 300, "gram": 0.5}},
+    {id:"a4",title:"Следопыт секторов",desc:"Совершить 30 вылазок в Зону",check:s => s.tracker.searches >= 30,reward:{"rubles": 2000, "exp": 450, "gram": 0.8}},
+    {id:"a5",title:"Охотник за артефактами",desc:"Найти 3 аномальных артефакта",check:s => s.tracker.artsFound >= 3,reward:{"rubles": 3500, "exp": 800, "gram": 1.5}},
+    {id:"a6",title:"Ветеран Зоны",desc:"Достигнуть 10-го ранга",check:s => s.level >= 10,reward:{"rubles": 5000, "exp": 1200, "gram": 2.0}},
+    {id:"a7",title:"Мастер Монолита",desc:"Уничтожить 50 врагов",check:s => s.tracker.kills >= 50,reward:{"rubles": 8000, "exp": 2000, "gram": 3.0}}
+  ],
+
+  stalkers: [
+    {"name":"Стрелок","title":"Легенда Зоны","level":92,"rubles":285400,"gram":28.4,"kills":1240,"avatar":"🏆","weapon":"gun_gauss","armor":"armor_exo_cs","artifact":"art_heart"},
+    {"name":"Шрам","title":"Ветеран-наёмник","level":85,"rubles":194200,"gram":22.1,"kills":980,"avatar":"🎯","weapon":"sniper_vintorez","armor":"armor_combat_cuirass","artifact":"art_singularity_core"},
+    {"name":"Дегтярёв","title":"Мастер СБУ","level":78,"rubles":142000,"gram":17.5,"kills":760,"avatar":"🎖️","weapon":"gun_railgun","armor":"armor_orion","artifact":"art_gravi"},
+    {"name":"Призрак","title":"Снайпер Зоны","level":71,"rubles":98600,"gram":14.2,"kills":620,"avatar":"👻","weapon":"sniper_vykhlop","armor":"armor_monolith_suit","artifact":"art_flash"},
+    {"name":"Клык","title":"Охотник на химер","level":64,"rubles":76400,"gram":11.8,"kills":510,"avatar":"🐺","weapon":"gun_rg6","armor":"armor_dark_stalker","artifact":"art_compass"},
+    {"name":"Волк","title":"Наставник Кордона","level":52,"rubles":45000,"gram":8.2,"kills":380,"avatar":"🌲","weapon":"rifle_ak74","armor":"armor_merc_suit","artifact":"art_medusa"},
+    {"name":"Фантом_99","title":"Опытный бродяга","level":43,"rubles":31200,"gram":6.5,"kills":290,"avatar":"⚡","weapon":"rifle_ak74","armor":"armor_jacket","artifact":"art_droplet"},
+    {"name":"Лис","title":"Бывалый сталкер","level":31,"rubles":18400,"gram":4.1,"kills":180,"avatar":"🦊","weapon":"pistol_tt","armor":"armor_jacket","artifact":"art_slime"},
+    {"name":"Юрик","title":"Новичок Свалки","level":15,"rubles":6200,"gram":1.8,"kills":65,"avatar":"🎒","weapon":"shotgun_bm16","armor":"armor_jacket","artifact":"art_thorn"}
+  ],
+
+  traderCatalog: [
+    "item_bread", "item_crackers", "item_water", "item_canned_fish", "item_sausage", "item_canteen",
+    "item_energy", "med_bandage", "med_kit", "med_army", "med_antirad", "knife_rusty", "knife_machete",
+    "pistol_pm", "pistol_tt", "pistol_fort", "shotgun_bm16", "shotgun_ij43", "armor_jacket", "armor_rad_suit",
+    "art_thorn", "art_slime", "art_droplet", "art_sparkler", "art_medusa"
   ]
 };
 
@@ -453,10 +506,10 @@ class Game{
       name:"Призрак_69",level:1,exp:0,expReq:150,
       hp:100,maxHp:100,energy:100,maxEnergy:100,
       hunger:100,thirst:100,radiation:0,
-      rubles:150,gramcoin:0.0,statPoints:0,
+      rubles:250,gramcoin:0.0,statPoints:0,
       stats:{str:10,agi:10,end:10,per:10},
-      equipment:{weapon:"knife_rusty",armor:"jacket_leather",artifact:null},
-      inventory:[{id:"knife_rusty",count:1},{id:"jacket_leather",count:1},{id:"bread",count:2},{id:"water_flask",count:2},{id:"bandage",count:2}],
+      equipment:{weapon:"knife_rusty",armor:"armor_jacket",artifact:null},
+      inventory:[{id:"knife_rusty",count:1},{id:"armor_jacket",count:1},{id:"item_bread",count:3},{id:"item_water",count:3},{id:"med_bandage",count:3}],
       tracker:{searches:0,kills:0,deaths:0,artsFound:0,totalGramEarned:0.0},
       completedQuests:[],completedAchievements:[],
       activeContracts:[],contractsRefreshTime:0,
@@ -474,7 +527,6 @@ class Game{
       }
     }catch(e){}
 
-    // ГАРАНТИЯ: ИСПРАВЛЕНИЕ ВСЕХ NaN, undefined, null и Infinity ИЗ СТАРЫХ СОХРАНЕНИЙ
     if(!s.name) s.name="Призрак_69";
     s.level = Math.max(1, Number(s.level) || 1);
     s.exp = Math.max(0, Number(s.exp) || 0);
@@ -483,15 +535,15 @@ class Game{
     s.maxHp = Math.max(50, Number(s.maxHp) || 100);
     s.energy = Math.max(0, Number(s.energy) || 100);
     s.maxEnergy = Math.max(50, Number(s.maxEnergy) || 100);
-    s.hunger = Math.max(0, Math.min(100, Number(s.hunger) || 100));
-    s.thirst = Math.max(0, Math.min(100, Number(s.thirst) || 100));
+    s.hunger = Math.max(0, Math.min(100, Number(s.hunger) ?? 100));
+    s.thirst = Math.max(0, Math.min(100, Number(s.thirst) ?? 100));
     s.radiation = Math.max(0, Math.min(100, Number(s.radiation) || 0));
-    s.rubles = Math.max(0, Number(s.rubles) || 150);
+    s.rubles = Math.max(0, Number(s.rubles) || 250);
     s.gramcoin = Math.max(0, Number(s.gramcoin) || 0.0);
     s.statPoints = Math.max(0, Number(s.statPoints) || 0);
     if(!s.stats) s.stats={str:10,agi:10,end:10,per:10};
     if(!s.equipment) s.equipment={weapon:null,armor:null,artifact:null};
-    if(!Array.isArray(s.inventory)) s.inventory=[{id:"knife_rusty",count:1},{id:"bread",count:2},{id:"water_flask",count:2},{id:"bandage",count:2}];
+    if(!Array.isArray(s.inventory)) s.inventory=[{id:"knife_rusty",count:1},{id:"armor_jacket",count:1},{id:"item_bread",count:3},{id:"item_water",count:3},{id:"med_bandage",count:3}];
 
     if(!s.tracker) s.tracker={};
     s.tracker.searches = Math.max(0, Number(s.tracker.searches) || 0);
@@ -563,11 +615,7 @@ class Game{
   }
 
   generateContracts(){
-    const pool=[
-      {id:"c_searches_3",title:"Разведка секторов",desc:"Сделайте 3 вылазки в локации",type:"searches",target:3,reward:{rubles:150,exp:180,gram:0.20}},
-      {id:"c_kills_2",title:"Охота на мутантов",desc:"Уничтожьте 2 противников в боях",type:"kills",target:2,reward:{rubles:200,exp:250,gram:0.35}},
-      {id:"c_art_1",title:"Поиск аномалий",desc:"Добудьте хотя бы 1 артефакт в локации",type:"arts",target:1,reward:{rubles:350,exp:400,gram:0.50}}
-    ];
+    const pool=DB.quests.slice(0, 3);
     this.state.activeContracts=pool;
     this.state.completedQuests=[];
   }
@@ -605,9 +653,9 @@ class Game{
     const s=this.state.stats;
     let maxHp=100+((s.end-10)*8);
     const aid=this.state.equipment.armor;
-    if(aid&&DB.items[aid]) maxHp+=DB.items[aid].hp||0;
+    if(aid&&DB.items[aid]) maxHp+=DB.items[aid].maxHp||DB.items[aid].hp||0;
     const artId=this.state.equipment.artifact;
-    if(artId&&DB.items[artId]) maxHp+=DB.items[artId].bonusHp||0;
+    if(artId&&DB.items[artId]) maxHp+=DB.items[artId].bonus?.hp||DB.items[artId].bonusHp||0;
     this.state.maxHp=maxHp;
     this.state.maxEnergy=100+((s.end-10)*3);
     this.state.hp=Math.min(this.state.hp,this.state.maxHp);
@@ -621,8 +669,8 @@ class Game{
     const wid=this.state.equipment.weapon;
     let baseDmg=[1,5]; // БЕЗ ОРУЖИЯ: СТРОГО 1-5!
     if(wid&&DB.items[wid]) baseDmg=DB.items[wid].dmg;
-    const aid=this.state.equipment.artifact;
-    const bAtk=(aid&&DB.items[aid]?.bonusAtk)||0;
+    const artId=this.state.equipment.artifact;
+    const bAtk=(artId&&DB.items[artId]?.bonus?.atk)||(artId&&DB.items[artId]?.bonusAtk)||0;
     const strBonus=Math.floor((s.str-10)*0.8);
     return [Math.max(1,baseDmg[0]+strBonus+bAtk), Math.max(5,baseDmg[1]+strBonus+bAtk)];
   }
@@ -631,7 +679,7 @@ class Game{
     const aid=this.state.equipment.armor;
     const artId=this.state.equipment.artifact;
     const armDef=(aid&&DB.items[aid]?.def)||0;
-    const artDef=(artId&&DB.items[artId]?.bonusDef)||0;
+    const artDef=(artId&&DB.items[artId]?.bonus?.def)||(artId&&DB.items[artId]?.bonusDef)||0;
     const s=this.state.stats;
     return armDef+artDef+Math.floor((s.end-10)*0.5);
   }
@@ -674,9 +722,9 @@ class Game{
       av.title="Открыть профиль и характеристики";
     }
 
-    document.getElementById('txt-hp').textContent=`${this.state.hp}/${this.state.maxHp}`;
+    document.getElementById('txt-hp').textContent=`${Math.round(this.state.hp)}/${this.state.maxHp}`;
     document.getElementById('bar-hp').style.width=`${Math.round((this.state.hp/this.state.maxHp)*100)}%`;
-    document.getElementById('txt-energy').textContent=`${this.state.energy}/${this.state.maxEnergy}`;
+    document.getElementById('txt-energy').textContent=`${Math.round(this.state.energy)}/${this.state.maxEnergy}`;
     document.getElementById('bar-energy').style.width=`${Math.round((this.state.energy/this.state.maxEnergy)*100)}%`;
 
     document.getElementById('txt-hunger').textContent=`${Math.round(this.state.hunger)}%`;
@@ -708,30 +756,28 @@ class Game{
       el.className='card';
       el.style.borderColor=isLocked?'var(--border)':'#1e4028';
 
-      let dColor='var(--green)';
-      if(loc.danger==='Средняя') dColor='var(--gold)';
-      if(loc.danger==='Опасная'||loc.danger==='Высокая') dColor='var(--red)';
-      if(loc.danger==='Экстремальная'||loc.danger==='Смертельная') dColor='#ff4757';
-      if(loc.danger==='Катастрофическая'||loc.danger==='Абсолютная') dColor='#9b59b6';
+      const dColor=loc.dangerColor || 'var(--green)';
+      const dText=loc.dangerText || 'Опасность';
+      const gPerc=loc.gramStr || ((loc.gramcoinChance||0.01)*100).toFixed(2)+'%';
+      const energy=loc.energyCost || 5;
 
-      const gPerc=(loc.gramChance*100).toFixed(2);
       const btnDisabled=isLocked||isExhausted;
       const btnClass=isLocked?'btn-dark':(isExhausted?'btn-red':'btn-green');
-      const btnText=isLocked?`🔒 Требуется ${loc.minLevel} ур.`:(isExhausted?'⚠️ Истощение (поешьте/попейте)':`Вылазка (-${loc.energy}⚡)`);
+      const btnText=isLocked?`🔒 Требуется ${loc.minLevel} ур.`:(isExhausted?'⚠️ Истощение (поешьте/попейте)':`Вылазка (-${energy}⚡)`);
 
       el.innerHTML=`
         <div class="cheader">
           <span style="font-weight:800;color:${isLocked?'var(--muted)':'#fff'}">${loc.name}</span>
-          <span class="brarity" style="background:${dColor};color:#070c09">${loc.danger}</span>
+          <span class="brarity" style="background:${dColor};color:#070c09">${dText}</span>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-bottom:6px">${loc.desc}</div>
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:10px;margin-bottom:8px">
-          <span>⚡ Расход: <strong>${loc.energy}</strong></span>
+          <span>⚡ Расход: <strong>${energy}</strong></span>
           <span style="color:#229ED9;display:flex;align-items:center;gap:3px">
             <svg viewBox="0 0 24 24" width="11" height="11" style="fill:#229ED9"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.37.74-.56 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.37.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06-.01.21-.03.44z"/></svg>
-            Шанс Gram: <strong>${gPerc}%</strong>
+            Шанс Gram: <strong>${gPerc}</strong>
           </span>
-          <span>Враги: <strong>${loc.enemies.length}</strong></span>
+          <span>Врагов: <strong>${(loc.enemies||[]).length}</strong></span>
         </div>
         <button class="btn ${btnClass} btn-block" ${btnDisabled?'disabled':''} onclick="game.startRaid('${loc.id}')">${btnText}</button>
       `;
@@ -749,7 +795,7 @@ class Game{
         el.innerHTML=`
           <span style="font-size:20px">${it.icon}</span>
           <span style="font-size:10px;font-weight:700;color:#fff">${it.name}</span>
-          <span class="brarity bg-${it.rarity}">${it.rarity}</span>
+          <span class="brarity bg-${it.rarity}">${it.rarityName||it.rarity}</span>
           <span style="font-size:9px;color:var(--muted)">Снять ✕</span>
         `;
       }else{
@@ -773,7 +819,7 @@ class Game{
       return true;
     });
 
-    document.getElementById('inv-slots-info').textContent=`Предметов: ${this.state.inventory.length}`;
+    document.getElementById('inv-slots-info').textContent=`Всего предметов: ${this.state.inventory.length}`;
 
     if(!items.length){
       box.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px">Рюкзак пуст в этой категории.</div>';
@@ -787,17 +833,18 @@ class Game{
       el.className='card';
       el.style.display='flex';
       el.style.justifyContent='space-between';
-      el.style.alignItems='center';
+      el.style.alignItems='flex-start';
+      el.style.gap='8px';
 
       let statsTxt='';
-      if(it.dmg) statsTxt=`Урон: ${it.dmg[0]}-${it.dmg[1]}`;
-      if(it.def) statsTxt=`Защита: +${it.def} (HP +${it.hp||0})`;
-      if(it.bonusDef||it.bonusAtk) statsTxt=`Защ +${it.bonusDef||0} | Атака +${it.bonusAtk||0} | HP +${it.bonusHp||0}`;
-      if(it.heal) statsTxt=`Исцеление: +${it.heal} HP`;
-      if(it.hunger) statsTxt=`Сытость: +${it.hunger}%`;
-      if(it.thirst) statsTxt=`Жажда: +${it.thirst}%`;
-      if(it.energy) statsTxt=`Энергия: +${it.energy}⚡`;
-      if(it.rad) statsTxt+=` Рад: ${it.rad} мЗв`;
+      if(it.dmg) statsTxt+=`Урон: ${it.dmg[0]}-${it.dmg[1]} `;
+      if(it.def) statsTxt+=`Защита: +${it.def} `;
+      if(it.bonus?.def) statsTxt+=`Защита: +${it.bonus.def} `;
+      if(it.bonus?.atk) statsTxt+=`Атака: +${it.bonus.atk} `;
+      if(it.heal) statsTxt+=`Лечение: +${it.heal} HP `;
+      if(it.hunger) statsTxt+=`Сытость: +${it.hunger}% `;
+      if(it.thirst) statsTxt+=`Жажда: +${it.thirst}% `;
+      if(it.energy) statsTxt+=`Энергия: +${it.energy}⚡ `;
 
       let btnHtml='';
       if(it.type==='weapon'||it.type==='armor'||it.type==='artifact'){
@@ -806,15 +853,16 @@ class Game{
         btnHtml=`<button class="btn btn-xs btn-cyan" onclick="game.useItem('${it.id}')">Применить</button>`;
       }
 
-      const sellPrice=Math.max(2,Math.floor(it.price*0.20));
+      const sellPrice=Math.max(2,Math.floor(it.price*0.25));
 
       el.innerHTML=`
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="font-size:24px">${it.icon}</div>
-          <div>
+        <div style="display:flex;align-items:flex-start;gap:8px;flex:1">
+          <div style="font-size:26px;margin-top:2px">${it.icon}</div>
+          <div style="flex:1">
             <div style="font-weight:700;color:#fff">${it.name} <span style="color:var(--muted);font-size:11px">x${invItem.count}</span></div>
-            <div style="font-size:10px;color:var(--muted)">${statsTxt}</div>
-            <div style="margin-top:2px"><span class="brarity bg-${it.rarity}">${it.rarity}</span></div>
+            <div style="font-size:11px;color:var(--muted);margin:2px 0;line-height:1.3">${it.desc || ''}</div>
+            <div style="font-size:10px;color:var(--gold);font-weight:600">${statsTxt}</div>
+            <div style="margin-top:4px"><span class="brarity bg-${it.rarity}">${it.rarityName||it.rarity}</span></div>
           </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
@@ -843,17 +891,18 @@ class Game{
         el.className='card';
         el.style.display='flex';
         el.style.justifyContent='space-between';
-        el.style.alignItems='center';
+        el.style.alignItems='flex-start';
+        el.style.gap='8px';
 
         const canAfford=this.state.rubles>=it.price;
 
         el.innerHTML=`
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="font-size:22px">${it.icon}</div>
-            <div>
+          <div style="display:flex;align-items:flex-start;gap:8px;flex:1">
+            <div style="font-size:24px;margin-top:2px">${it.icon}</div>
+            <div style="flex:1">
               <div style="font-weight:700;color:#fff">${it.name}</div>
-              <div style="font-size:10px;color:var(--muted)">${it.desc}</div>
-              <span class="brarity bg-${it.rarity}">${it.rarity}</span>
+              <div style="font-size:11px;color:var(--muted);margin:2px 0">${it.desc || ''}</div>
+              <span class="brarity bg-${it.rarity}">${it.rarityName||it.rarity}</span>
             </div>
           </div>
           <button class="btn btn-xs ${canAfford?'btn-gold':'btn-dark'}" ${canAfford?'':'disabled'} onclick="game.buyItem('${it.id}')">${it.price} ₽</button>
@@ -873,7 +922,7 @@ class Game{
         const it=DB.items[invItem.id];
         if(!it) return;
         const isEq=this.state.equipment.weapon===it.id||this.state.equipment.armor===it.id||this.state.equipment.artifact===it.id;
-        const sPrice=Math.max(2,Math.floor(it.price*0.20));
+        const sPrice=Math.max(2,Math.floor(it.price*0.25));
 
         const el=document.createElement('div');
         el.className='card';
@@ -943,7 +992,7 @@ class Game{
           </div>
           <div style="font-size:11px;color:var(--muted);margin-bottom:6px">${a.desc}</div>
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px">
-            <span style="color:var(--gold)">+${a.reward.rubles}₽, +${a.reward.exp}XP, <strong style="color:#229ED9">+${a.reward.gram} GRAM</strong></span>
+            <span style="color:var(--gold)">+${a.reward.rubles}₽, +${a.reward.exp}XP${a.reward.gram ? `, <strong style="color:#229ED9">+${a.reward.gram} GRAM</strong>`:''}</span>
             ${isDone?'':`<button class="btn btn-xs ${canClaim?'btn-gold':'btn-dark'}" ${canClaim?'':'disabled'} onclick="game.claimAchievement('${a.id}')">Забрать награду</button>`}
           </div>
         `;
@@ -987,7 +1036,6 @@ class Game{
     const box=document.getElementById('stalkers-list');
     box.innerHTML='';
 
-    // Добавляем текущего игрока в общий список
     const playerStalker={
       name:this.state.name,
       title:this.state.title,
@@ -1071,8 +1119,9 @@ class Game{
       this.sound.hit();
       return;
     }
-    if(this.state.energy<loc.energy){
-      this.toast(`Недостаточно энергии! Требуется ${loc.energy}⚡`,'red');
+    const energy=loc.energyCost || loc.energy || 5;
+    if(this.state.energy<energy){
+      this.toast(`Недостаточно энергии! Требуется ${energy}⚡`,'red');
       this.sound.hit();
       return;
     }
@@ -1081,7 +1130,7 @@ class Game{
     this.currentLoc=loc;
     this.cleanBattleTimer();
 
-    this.state.energy-=loc.energy;
+    this.state.energy-=energy;
     this.state.tracker.searches=(this.state.tracker.searches||0)+1;
     this.state.hunger=Math.max(0,this.state.hunger-3);
     this.state.thirst=Math.max(0,this.state.thirst-4);
@@ -1093,11 +1142,10 @@ class Game{
     document.getElementById('btn-raid-finish').style.display='none';
     document.getElementById('modal-raid').classList.add('active');
 
-    this.logRaid(`Сталкер входит в сектор «${loc.name}»... Опасность: ${loc.danger}`);
+    this.logRaid(`Сталкер выдвигается в сектор «${loc.name}»... Опасность: ${loc.dangerText||loc.danger||'Неизвестно'}`);
 
-    // Шанс встречи врага (70% в опасных зонах)
     const encounterEnemy=Math.random()<0.70;
-    if(encounterEnemy&&loc.enemies.length){
+    if(encounterEnemy&&loc.enemies&&loc.enemies.length){
       const enemyKey=loc.enemies[Math.floor(Math.random()*loc.enemies.length)];
       const proto=DB.enemies[enemyKey];
       if(proto){
@@ -1174,11 +1222,10 @@ class Game{
         return;
       }
 
-      // Ответный удар врага
       this.enemyTurn(e);
 
     }else if(act==='heal'){
-      const med=this.state.inventory.find(i=>['bandage','medkit_basic','medkit_army'].includes(i.id));
+      const med=this.state.inventory.find(i=>['med_bandage','med_kit','med_army','bandage','medkit_basic','medkit_army'].includes(i.id));
       if(!med){this.toast("В рюкзаке нет бинтов или аптечек!",'red');return;}
       this.useItem(med.id);
       this.logRaid(`💉 Вы применили средство исцеления в бою!`,'lloot');
@@ -1262,9 +1309,9 @@ class Game{
     lootBox.innerHTML='';
     document.getElementById('raid-loot-area').style.display='block';
 
-    // ВЫПАДЕНИЕ GRAMCOIN: шанс масштабируется от локации + внимательности
     const s=this.state.stats;
-    const finalGramChance=loc.gramChance+((s.per-10)*0.001);
+    const baseChance = loc.gramcoinChance || loc.gramChance || 0.01;
+    const finalGramChance=baseChance+((s.per-10)*0.001);
 
     if(Math.random()<finalGramChance){
       const gWon=Number((0.20+Math.random()*2.80).toFixed(2));
@@ -1277,7 +1324,6 @@ class Game{
       lootBox.appendChild(el);
     }
 
-    // ВЫПАДЕНИЕ ХАБАРА
     if(loc.loot&&loc.loot.length){
       const itId=loc.loot[Math.floor(Math.random()*loc.loot.length)];
       const it=DB.items[itId];
@@ -1286,13 +1332,12 @@ class Game{
         if(it.type==='artifact') this.state.tracker.artsFound=(this.state.tracker.artsFound||0)+1;
         const el=document.createElement('div');
         el.style.fontSize='12px';
-        el.innerHTML=`<span>${it.icon}</span> <strong>${it.name}</strong> <span class="brarity bg-${it.rarity}">${it.rarity}</span>`;
+        el.innerHTML=`<span>${it.icon}</span> <strong>${it.name}</strong> <span class="brarity bg-${it.rarity}">${it.rarityName||it.rarity}</span>`;
         lootBox.appendChild(el);
         this.logRaid(`Найден предмет: ${it.name}.`,'lloot');
       }
     }
 
-    // Радиация в локации
     const radGain=Math.floor(Math.random()*4);
     if(radGain>0){
       this.state.radiation=Math.min(100,this.state.radiation+radGain);
@@ -1397,7 +1442,7 @@ class Game{
   sellItem(id){
     const it=DB.items[id];
     if(!it) return;
-    const sP=Math.max(2,Math.floor(it.price*0.20));
+    const sP=Math.max(2,Math.floor(it.price*0.25));
     this.removeItem(id,1);
     this.state.rubles+=sP;
     this.sound.click();
@@ -1438,8 +1483,8 @@ class Game{
 
     document.getElementById('prof-modal-name').textContent=this.state.name;
     document.getElementById('prof-lvl-exp').textContent=`${this.state.level} ур. (${this.state.exp||0} / ${this.state.expReq||150})`;
-    document.getElementById('prof-hp').textContent=`${this.state.hp} / ${this.state.maxHp}`;
-    document.getElementById('prof-energy').textContent=`${this.state.energy} / ${this.state.maxEnergy}`;
+    document.getElementById('prof-hp').textContent=`${Math.round(this.state.hp)} / ${this.state.maxHp}`;
+    document.getElementById('prof-energy').textContent=`${Math.round(this.state.energy)} / ${this.state.maxEnergy}`;
     document.getElementById('prof-vital').textContent=`${Math.round(this.state.hunger||0)}% / ${Math.round(this.state.thirst||0)}%`;
     document.getElementById('prof-dmg').textContent=`${atk[0]} - ${atk[1]}`;
     document.getElementById('prof-def').textContent=`+${def}`;
@@ -1491,19 +1536,38 @@ class Game{
     const v=document.getElementById('input-nick').value.trim();
     if(v.length<3||v.length>16){
       this.toast("Позывной должен быть от 3 до 16 символов!",'red');
+      this.sound.hit();
       return;
     }
-    const isTaken=DB.stalkers.some(s=>s.name.toLowerCase()===v.toLowerCase());
-    if(isTaken){
-      this.toast("Этот позывной уже занят ветераном Зоны!",'red');
+    const reservedNpc=[
+      "стрелок","шрам","дегтярёв","призрак","клык","волк","фантом_99","лис","юрик",
+      "меченый","сидорович","бармен","сахаров","лебедев","новиков","кардан","шустрый",
+      "проводник","зулус","вано","борода","султан","сыч","локи","ковальский","призрак_69"
+    ];
+    let takenRegistry=[];
+    try{ takenRegistry=JSON.parse(localStorage.getItem("zona_taken_nicks_registry")||"[]"); }catch(e){}
+
+    const isReserved = reservedNpc.includes(v.toLowerCase()) || DB.stalkers.some(s=>s.name.toLowerCase()===v.toLowerCase());
+    const isAlreadyTaken = takenRegistry.includes(v.toLowerCase()) && v.toLowerCase() !== (this.state.name||"").toLowerCase();
+
+    if(isReserved || isAlreadyTaken){
+      this.toast(`❌ Позывной «${v}» уже занят другим сталкером! Придумайте уникальный.`, 'red');
+      this.sound.hit();
       return;
     }
+
+    if(!takenRegistry.includes(v.toLowerCase())){
+      takenRegistry.push(v.toLowerCase());
+      try{ localStorage.setItem("zona_taken_nicks_registry", JSON.stringify(takenRegistry)); }catch(e){}
+    }
+
     this.state.name=v;
     document.getElementById('modal-nick').classList.remove('active');
     this.renderHeader();
     this.renderLeaderboard();
     this.saveState();
-    this.toast(`Позывной изменён: ${v}`);
+    this.sound.win();
+    this.toast(`Позывной успешно утверждён: ${v}`, 'gold');
   }
 
   switchTab(tabId){
