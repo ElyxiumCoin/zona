@@ -20,19 +20,63 @@
   let savedText = null, pendingText = null, debounce = null, lastError = null;
   let active = null, lastSyncedAt = 0, retryDelay = 0, flushing = null;
 
+  // A lightweight PDA-style notification. It never claims a cloud save succeeded
+  // until Telegram has confirmed the bank contents and the HEAD pointer write.
+  function installNoticeStyles() {
+    if (document.getElementById('zona-pda-save-styles')) return;
+    const css = document.createElement('style');
+    css.id = 'zona-pda-save-styles';
+    css.textContent = `
+      #zona-cloud-status{position:fixed;z-index:100050;right:max(14px,calc((100vw - 1180px)/2 + 18px));bottom:96px;width:min(350px,calc(100vw - 28px));min-height:70px;box-sizing:border-box;pointer-events:none;display:flex;align-items:center;gap:11px;padding:12px 15px 13px 13px;overflow:hidden;border-radius:5px;border:1px solid #6b6747;background:linear-gradient(125deg,rgba(27,31,24,.985),rgba(12,19,15,.985));box-shadow:inset 3px 0 0 #c6a55d,0 8px 26px #000b,0 0 21px #c6a55d18;color:#e9e7dc;font-family:'Segoe UI',Arial,sans-serif;animation:zonaPdaNoticeIn .28s ease-out}
+      #zona-cloud-status[hidden]{display:none!important}
+      #zona-cloud-status:before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.08;background:repeating-linear-gradient(to bottom,transparent 0,transparent 3px,#fff 4px)}
+      #zona-cloud-status .zona-pda-symbol{position:relative;flex:0 0 39px;height:39px;display:flex;align-items:center;justify-content:center;border:1px solid #b9a46d5e;border-radius:4px;background:#c6a55d13;color:#e2bf77;font:700 23px/1 monospace;text-shadow:0 0 10px #c6a55d5c}
+      #zona-cloud-status .zona-pda-copy{position:relative;min-width:0;flex:1}
+      #zona-cloud-status .zona-pda-kicker{font:700 9px/1.5 Consolas,monospace;color:#a3a78f;letter-spacing:1.6px;margin-bottom:2px}
+      #zona-cloud-status .zona-pda-title{font:800 11px/1.5 'Segoe UI',Arial,sans-serif;letter-spacing:.7px;color:#edcd8f}
+      #zona-cloud-status .zona-pda-description{font:11px/1.4 'Segoe UI',Arial,sans-serif;color:#d6d5c8;overflow-wrap:anywhere}
+      #zona-cloud-status .zona-pda-line{position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,#e8be6f,#88ab82 75%,transparent);opacity:.8}
+      #zona-cloud-status[data-kind="error"]{border-color:#a55342;box-shadow:inset 3px 0 0 #d6725d,0 8px 26px #000b,0 0 20px #b7433220}
+      #zona-cloud-status[data-kind="error"] .zona-pda-title,#zona-cloud-status[data-kind="error"] .zona-pda-symbol{color:#f3a38b}
+      #zona-cloud-status[data-kind="error"] .zona-pda-line{background:linear-gradient(90deg,#df755f,transparent)}
+      #zona-cloud-status[data-kind="info"] .zona-pda-symbol{animation:zonaPdaBlink 1.4s ease-in-out infinite}
+      @keyframes zonaPdaNoticeIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+      @keyframes zonaPdaBlink{50%{opacity:.45}}
+      @media(max-width:550px){#zona-cloud-status{right:14px;bottom:90px;max-width:calc(100vw - 28px);padding:10px 12px}#zona-cloud-status .zona-pda-symbol{flex-basis:35px;height:35px}}
+      @media(prefers-reduced-motion:reduce){#zona-cloud-status,#zona-cloud-status .zona-pda-symbol{animation:none!important}}
+    `;
+    (document.head || document.body).append(css);
+  }
   function status(message, kind = 'info', sticky = false) {
+    installNoticeStyles();
     let n = document.getElementById('zona-cloud-status');
     if (!n) {
-      n = document.createElement('div'); n.id = 'zona-cloud-status';
-      n.setAttribute('role', 'status'); n.setAttribute('aria-live', 'polite');
-      n.style.cssText = 'position:fixed;bottom:78px;left:50%;transform:translateX(-50%);z-index:10020;max-width:calc(100% - 28px);padding:7px 12px;border-radius:7px;background:#14241a;box-shadow:0 3px 22px #000b;border:1px solid #355d42;color:#e7f6e7;font:11px/1.5 sans-serif;text-align:center;pointer-events:none;opacity:.96';
+      n = document.createElement('div');
+      n.id = 'zona-cloud-status';
+      n.setAttribute('role', 'status');
+      n.setAttribute('aria-live', 'polite');
+      const symbol = document.createElement('div');symbol.className = 'zona-pda-symbol';
+      const copy = document.createElement('div');copy.className = 'zona-pda-copy';
+      const kicker = document.createElement('div');kicker.className = 'zona-pda-kicker';
+      const title = document.createElement('div');title.className = 'zona-pda-title';
+      const description = document.createElement('div');description.className = 'zona-pda-description';
+      const line = document.createElement('div');line.className = 'zona-pda-line';
+      copy.append(kicker, title, description);
+      n.append(symbol, copy, line);
       document.body.append(n);
+      n._views = {symbol, kicker, title, description};
     }
-    n.style.borderColor = kind === 'error' ? '#be5151' : kind === 'success' ? '#36ae72' : '#52694a';
-    n.textContent = message;
+    const loaded = kind === 'success' && /загружен/i.test(message);
+    const upToDate = kind === 'success' && /актуален/i.test(message);
+    n.dataset.kind = kind;
+    n.setAttribute('aria-live', kind === 'error' ? 'assertive' : 'polite');
+    n._views.symbol.textContent = kind === 'error' ? '!' : kind === 'success' ? '✓' : '↻';
+    n._views.kicker.textContent = 'ZONA  /  КПК  /  CLOUD';
+    n._views.title.textContent = kind === 'error' ? 'ОШИБКА СОХРАНЕНИЯ' : loaded ? 'ПРОГРЕСС ВОССТАНОВЛЕН' : upToDate ? 'ПРОГРЕСС АКТУАЛЕН' : kind === 'success' ? 'ПРОГРЕСС СОХРАНЁН' : 'СИНХРОНИЗАЦИЯ КПК';
+    n._views.description.textContent = kind === 'success' ? loaded ? 'Данные получены из облака Telegram' : upToDate ? 'В облаке уже последняя версия' : 'Облачное хранилище Telegram · готово' : String(message).replace(/^[☁⚠]\s*/, '');
     n.hidden = !message;
     clearTimeout(n._hide);
-    if (!sticky && message) n._hide = setTimeout(() => { n.hidden = true; }, 3700);
+    if (!sticky && message) n._hide = setTimeout(() => { n.hidden = true; }, kind === 'success' ? 3200 : 4400);
   }
 
   function fatal(message) {
@@ -236,7 +280,23 @@
     booted = true;
     window.dispatchEvent(new Event('zona:ready'));
     enabled = isTelegram;
-    if (isTelegram) {const saveButton = document.getElementById('zona-save-now');if (saveButton) saveButton.style.display = 'inline-flex';}
+    if (isTelegram) {
+      const saveButton = document.getElementById('zona-save-now');
+      if (saveButton) {
+        saveButton.style.display = 'inline-flex';
+        saveButton.onclick = async () => {
+          try {
+            window.game?.saveState?.();
+            const before = lastSyncedAt;
+            await flush();
+            if (before === lastSyncedAt) status('Прогресс актуален', 'success');
+          } catch (e) {
+            // flush() already displays a themed error notification.
+            console.warn('[ZONA] Manual cloud save failed', e);
+          }
+        };
+      }
+    }
     if (isTelegram && window.game?.state) {
       queueSave(window.game.state); // Migrate legacy save or persist initialization updates.
       setInterval(() => {if (window.game?.state) queueSave(window.game.state);}, SYNC_INTERVAL);
