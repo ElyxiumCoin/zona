@@ -10,7 +10,7 @@
   const HEAD = 'ZONA_V1_HEAD';
   const CHUNK_SIZE = 3000; // Telegram limit is 4096 UTF-16 characters per value.
   const MAX_PARTS = 350; // two banks fit within 1024 cloud keys.
-  const SYNC_INTERVAL = 25000;
+  const SYNC_INTERVAL = 180000; // Automatic cloud sync once every three minutes.
   const STALL_LIMIT = 12000;
   const tg = window.Telegram?.WebApp || null;
   const isTelegram = Boolean(tg?.initData && tg?.initDataUnsafe?.user?.id);
@@ -176,11 +176,6 @@
   function localWrite(text) {
     try {localStorage.setItem(LOCAL_KEY, text);} catch (e) {console.warn('[ZONA] Local cache unavailable', e);}
   }
-  function schedule(delay = 1800) {
-    if (!isTelegram || !enabled || !pendingText || pendingText === savedText) return;
-    clearTimeout(debounce);
-    debounce = setTimeout(() => {flush().catch(console.error);}, delay);
-  }
   async function writeBank(text) {
     const bank = active === 'A' ? 'B' : 'A';
     const chunks = split(text);
@@ -200,22 +195,19 @@
   }
   async function flush() {
     if (!isTelegram || !enabled) return;
-    if (running) {queued = true; return flushing;}
+    if (running) return flushing;
     running = true;
     flushing = (async () => {
       try {
-        do {
-          queued = false;
-          const text = pendingText;
-          if (!text || text === savedText) break;
-          await writeBank(text);
-        } while (queued || (pendingText && pendingText !== savedText));
+        const text = pendingText;
+        if (text && text !== savedText) await writeBank(text);
+        // Changes made during this upload wait for the next scheduled sync.
       } catch (error) {
         lastError = error;
         retryDelay = Math.min(retryDelay ? retryDelay * 2 : 7000, 60000);
         console.error('[ZONA] Cloud save failed', error);
         status('⚠ Не удалось сохранить в Telegram: ' + error.message, 'error', true);
-        if (enabled) schedule(retryDelay);
+        // Retry on the next three-minute tick, or on an explicit save.
         throw error;
       } finally {running = false;flushing = null;}
     })();
@@ -226,9 +218,8 @@
     if (!enabled) return;
     try {
       const text = JSON.stringify(state);
-      if (!text || text === savedText) return;
+      if (!text) return;
       pendingText = text;
-      schedule();
     } catch (e) {lastError = e;status('⚠ Ошибка сериализации прогресса', 'error', true);}
   }
   async function clearForReset() {
@@ -299,7 +290,7 @@
     }
     if (isTelegram && window.game?.state) {
       queueSave(window.game.state); // Migrate legacy save or persist initialization updates.
-      setInterval(() => {if (window.game?.state) queueSave(window.game.state);}, SYNC_INTERVAL);
+      setInterval(() => {if (window.game?.state) {queueSave(window.game.state);flush().catch(console.error);}}, SYNC_INTERVAL);
       document.addEventListener('visibilitychange', () => {if (document.hidden) {queueSave(window.game?.state);flush().catch(console.error);}});
       window.addEventListener('pagehide', () => {queueSave(window.game?.state);flush().catch(console.error);});
     }
