@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>ZONA Z — СНАРЯЖЕНИЕ 5.0</title>
 <style id="zona-startup-gate">
+#zona-startup-screen .startup-version{display:flex;justify-content:flex-end;margin:22px 0 -10px;line-height:1}
+#zona-startup-screen .startup-version-tag{display:inline-flex;align-items:center;gap:7px;padding:6px 9px;border:1px solid #aa925940;border-radius:3px;background:linear-gradient(120deg,#182017d9,#0a120ed9);box-shadow:inset 0 1px 0 #dfc98a0a;color:#c6b482;font:9px/1.2 Consolas,monospace;letter-spacing:.35px;white-space:nowrap}
+#zona-startup-screen .startup-version-label{color:#939982;font:8px/1.2 Arial,sans-serif;letter-spacing:1px;padding-right:7px;border-right:1px solid #aa925940}
+
 #zona-startup-screen .startup-weather{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 #zona-startup-screen .startup-rain{position:absolute;inset:-60px;background:repeating-linear-gradient(105deg,transparent 0 47px,#c1ced529 48px,transparent 49px 96px);background-size:143px 230px;opacity:.28;animation:startup-rain 1.1s linear infinite}
 #zona-startup-screen .startup-fog{position:absolute;inset:15% -20% 28%;background:radial-gradient(ellipse at 35% 65%,#b4bba31c,transparent 65%),radial-gradient(ellipse at 75% 40%,#a4b2a31a,transparent 55%);animation:startup-fog 17s ease-in-out infinite alternate}
@@ -1348,8 +1352,27 @@ html.proportion-v2 body #app#app #kpk-buildings .reward-craft strong{font:700 12
 html.proportion-v2 body #app#app #kpk-buildings .reward-item span{font:11px/1.3 'Roboto Condensed',Arial,sans-serif!important;color:#d4d8bd;overflow-wrap:anywhere}
 html.proportion-v2 body #app#app #kpk-buildings .reward-part-list>summary,html.proportion-v2 body #app#app #kpk-buildings .reward-more>summary{font:11px/1.4 Arial,sans-serif!important;color:#cdb980;padding:7px 0!important;cursor:pointer}
 html.proportion-v2 body #app#app #kpk-buildings .reward-part-list p{font:11px/1.4 Arial,sans-serif!important;margin:4px 0!important}
+</style><style id="save-summary-style">#zona-save-summary{padding:10px 12px;border:1px solid #655e43;background:linear-gradient(120deg,#222b1e,#101a12);display:flex;flex-direction:column;gap:5px}#zona-save-summary strong{font:700 12px/1.4 Arial,sans-serif;color:#d7c28b}#zona-save-summary span{font:11px/1.5 Arial,sans-serif;color:#afb69e}#zona-save-summary button{align-self:flex-start;margin-top:3px}#zona-save-summary button[hidden]{display:none!important}#zona-save-summary[data-state="error"]{border-color:#ab7654}</style><style id="compact-save-panels">/* Compact PDA loading and synchronization panels */
+#zona-startup-screen .startup-panel{padding:14px 15px;border:1px solid #9e855280;border-radius:5px;background:linear-gradient(135deg,#202b20f2,#0c1712f5);box-shadow:inset 0 1px 0 #e5cd8a12,0 8px 24px #0005}
+#zona-startup-screen .startup-line{font-size:10px;letter-spacing:1.2px}
+#zona-startup-screen #zona-startup-percent{padding:4px 7px;border:1px solid #bca06550;border-radius:3px;background:#c7aa6010;font-size:12px;color:#efdaa2;min-width:39px;text-align:center;font-variant-numeric:tabular-nums}
+#zona-startup-screen .startup-track{height:9px;margin:11px 0 9px;padding:2px;border-color:#8f7a4d80;border-radius:2px}
+#zona-startup-screen #zona-startup-message{font-size:11px;line-height:1.45;min-height:16px;margin:0;color:#c5c9b6}
+#zona-startup-screen .startup-tip{margin:12px 0 0;padding:9px 10px;min-height:0;border:0;border-left:2px solid #b89a55;border-radius:0 3px 3px 0;background:#bfa4640a;font-size:10px;line-height:1.5;color:#b8bba8}
+#zona-startup-screen .startup-tip strong{font-size:8px;letter-spacing:1.3px;margin-bottom:4px;color:#bdab7a}
+#zona-startup-screen .startup-note{font-size:9px;line-height:1.5;margin-top:12px;color:#969e8c}
+#zona-save-summary{position:relative;display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:5px 10px!important;padding:12px 13px 11px 24px!important;border:1px solid #82754b70!important;border-radius:5px;background:linear-gradient(120deg,#20291de8,#101a13f5)!important;box-shadow:inset 0 1px 0 #dcc5820d!important}
+#zona-save-summary:before{content:'';position:absolute;left:10px;top:17px;width:5px;height:5px;border-radius:50%;background:#c6a961;box-shadow:0 0 6px #c6a94244}
+#zona-save-summary[data-state="saved"]:before{background:#9bb581;box-shadow:0 0 6px #9bb58133}
+#zona-save-summary[data-state="error"]:before{background:#d39272;box-shadow:none}
+#zona-save-summary [data-save-title]{grid-column:1;align-self:center;font:700 11px/1.4 Arial,sans-serif!important;color:#dfd1a5!important}
+#zona-save-summary [data-save-time]{grid-column:1/-1;font:10px/1.5 Consolas,monospace!important;color:#adb59e!important}
+#zona-save-summary [data-save-note]{grid-column:1/-1;padding-top:6px;margin-top:2px;border-top:1px solid #a58d4e25;font:10px/1.5 Arial,sans-serif!important;color:#919d8a!important}
+#app #zona-save-summary button{grid-column:2;grid-row:1;align-self:center;margin:0!important;padding:6px 9px!important;min-height:30px!important;font:700 10px/1.2 Arial,sans-serif!important;letter-spacing:0!important;border-radius:3px!important;color:#ead8a5!important;border:1px solid #9b85564d!important;background:linear-gradient(#393c29,#222b1e)!important;box-shadow:inset 0 1px 0 #e7d39810!important}
+#app #zona-save-summary button:disabled{opacity:.5}
+@media(max-width:340px){#app #zona-save-summary button{grid-row:4;grid-column:1/-1;justify-self:start}}
 </style></head>
-<body><div id="zona-startup-screen" role="status" aria-live="polite"><div class="startup-weather" aria-hidden="true"><div class="startup-rain"></div><div class="startup-fog"></div><div class="startup-lamp"></div></div><div class="startup-content"><div class="startup-eyebrow">КПК СТАЛКЕРА / ТЕРРИТОРИЯ ОТЧУЖДЕНИЯ</div><strong class="startup-title">ZONA Z</strong><div class="startup-caption">У ЗОНЫ ЕСТЬ СВОИ ПРАВИЛА</div><div class="startup-panel"><div class="startup-line"><span>ЗАГРУЗКА КПК</span><span id="zona-startup-percent">0%</span></div><div id="zona-startup-progress" class="startup-track" role="progressbar" aria-label="Подготовка к запуску" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="zona-startup-fill" class="startup-fill"></div></div><p id="zona-startup-message">Устанавливаем связь с КПК…</p><div class="startup-tip" aria-live="off"><strong>СОВЕТ СТАЛКЕРУ</strong><span id="zona-startup-tip">Сюжетное снаряжение нельзя продать или разобрать.</span></div></div><p class="startup-note">Подготовка занимает около 20 секунд.<br>Дождитесь завершения связи перед выходом в Зону.</p></div></div>
+<body><div id="zona-startup-screen" role="status" aria-live="polite"><div class="startup-weather" aria-hidden="true"><div class="startup-rain"></div><div class="startup-fog"></div><div class="startup-lamp"></div></div><div class="startup-content"><div class="startup-eyebrow">КПК СТАЛКЕРА / ТЕРРИТОРИЯ ОТЧУЖДЕНИЯ</div><strong class="startup-title">ZONA Z</strong><div class="startup-caption">У ЗОНЫ ЕСТЬ СВОИ ПРАВИЛА</div><div class="startup-panel"><div class="startup-line"><span>ЗАГРУЗКА КПК</span><span id="zona-startup-percent">0%</span></div><div id="zona-startup-progress" class="startup-track" role="progressbar" aria-label="Подготовка к запуску" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="zona-startup-fill" class="startup-fill"></div></div><p id="zona-startup-message">Устанавливаем связь с КПК…</p><div class="startup-tip" aria-live="off"><strong>СОВЕТ СТАЛКЕРУ</strong><span id="zona-startup-tip">Сюжетное снаряжение нельзя продать или разобрать.</span></div></div><p class="startup-note">Подготовка занимает около 20 секунд.<br>Дождитесь завершения связи перед выходом в Зону.</p><p class="startup-version"><span class="startup-version-tag" aria-label="Версия игры 2026.10.22.6"><span class="startup-version-label">ВЕРСИЯ</span><span>2026.10.22.6</span></span></p></div></div>
 <div class="scanlines"></div>
 <div id="toast-box"></div>
 <div id="app">
@@ -1386,7 +1409,13 @@ html.proportion-v2 body #app#app #kpk-buildings .reward-part-list p{font:11px/1.
 
   <!-- TAB: LOCATIONS -->
   <main id="tab-locations" class="content active">
-    <div class="card" style="border-color:var(--border)">
+    <section id="zona-save-summary" class="card" aria-label="Сохранение прогресса">
+      <strong data-save-title>Проверяем сохранение…</strong>
+      <span data-save-time>Telegram: проверяем синхронизацию</span>
+      <span data-save-note>Автосинхронизация — раз в 3 минуты.</span>
+      <button class="btn btn-dark btn-xs" type="button" hidden aria-label="Сохранить прогресс в Telegram сейчас">Сохранить</button>
+    </section>
+    <div id="locations-intro" class="card" style="border-color:var(--border)">
       <div class="cheader"><span style="color:var(--neon)">🗺️ ВЫЛАЗКИ В ЗОНУ</span><span style="font-size:11px;color:var(--muted)">28 секторов</span></div>
       <div style="font-size:11px;color:var(--muted);line-height:1.4">Исследуйте заброшенные объекты, ищите редкий хабар, артефакты и аномальные Gramcoin!</div>
     </div>
@@ -1740,7 +1769,7 @@ class Game{
     return s;
   }
 
-  saveState(){try{localStorage.setItem("zona_z_save_v10",JSON.stringify(this.state));}catch(e){} window.ZonaTelegramCloud?.queueSave(this.state);}
+  saveState(){try{localStorage.setItem("zona_z_save_v10",JSON.stringify(this.state));window.ZonaTelegramCloud?.recordLocalSave(true);}catch(e){window.ZonaTelegramCloud?.recordLocalSave(false);} window.ZonaTelegramCloud?.queueSave(this.state);}
 
   async resetProgress(){
     if(!confirm("ВНИМАНИЕ! Полностью сбросить весь прогресс сталкера? Все вещи, характеристики и баланс будут сброшены!"))return;
@@ -2166,9 +2195,9 @@ class Game{
       av.title="Открыть профиль и характеристики";
     }
 
-    document.getElementById('txt-hp').textContent=`${Math.round(this.state.hp)}/${this.state.maxHp}`;
+    document.getElementById('txt-hp').textContent=`${Number(this.state.hp.toFixed(1)).toLocaleString("ru-RU")}/${Number(this.state.maxHp.toFixed(1)).toLocaleString("ru-RU")}`;
     document.getElementById('bar-hp').style.width=`${Math.round((this.state.hp/this.state.maxHp)*100)}%`;
-    document.getElementById('txt-energy').textContent=`${Math.round(this.state.energy)}/${this.state.maxEnergy}`;
+    document.getElementById('txt-energy').textContent=`${Number(this.state.energy.toFixed(1)).toLocaleString("ru-RU")}/${Number(this.state.maxEnergy.toFixed(1)).toLocaleString("ru-RU")}`;
     document.getElementById('bar-energy').style.width=`${Math.round((this.state.energy/this.state.maxEnergy)*100)}%`;
 
     document.getElementById('txt-hunger').textContent=`${Math.round(this.state.hunger)}%`;
@@ -2176,7 +2205,7 @@ class Game{
     document.getElementById('txt-thirst').textContent=`${Math.round(this.state.thirst)}%`;
     document.getElementById('bar-thirst').style.width=`${Math.min(100,Math.round(this.state.thirst))}%`;
 
-    document.getElementById('txt-rad').textContent=`${this.state.radiation} мЗв`;
+    document.getElementById('txt-rad').textContent=`${Number(this.state.radiation.toFixed(1)).toLocaleString("ru-RU")} мЗв`;
     document.getElementById('bar-rad').style.width=`${Math.min(100,this.state.radiation)}%`;
 
     const exBanner=document.getElementById('exhaustion-banner');
@@ -3285,8 +3314,8 @@ class Game{
 
     document.getElementById('prof-modal-name').textContent=this.state.name;
     document.getElementById('prof-lvl-exp').textContent=`${this.state.level} ур. (${this.state.exp||0} / ${this.state.expReq||150})`;
-    document.getElementById('prof-hp').textContent=`${Math.round(this.state.hp)} / ${this.state.maxHp}`;
-    document.getElementById('prof-energy').textContent=`${Math.round(this.state.energy)} / ${this.state.maxEnergy}`;
+    document.getElementById('prof-hp').textContent=`${Number(this.state.hp.toFixed(1)).toLocaleString("ru-RU")} / ${Number(this.state.maxHp.toFixed(1)).toLocaleString("ru-RU")}`;
+    document.getElementById('prof-energy').textContent=`${Number(this.state.energy.toFixed(1)).toLocaleString("ru-RU")} / ${Number(this.state.maxEnergy.toFixed(1)).toLocaleString("ru-RU")}`;
     document.getElementById('prof-vital').textContent=`${Math.round(this.state.hunger||0)}% / ${Math.round(this.state.thirst||0)}%`;
     document.getElementById('prof-rad').textContent=`${Math.round(this.state.radiation||0)} мЗв`;
     document.getElementById('prof-dmg').textContent=`${atk[0]} - ${atk[1]}`;
@@ -3496,7 +3525,7 @@ window.addEventListener('zona:ready',()=>{
 
   const locations=DB.locations;
   const image=(key,cls,alt)=>{const el=document.createElement('img');el.src=photos[key];el.className=cls;el.alt=alt;el.decoding='async';return el;};
-  const hero=document.querySelector('#tab-locations>.card');
+  const hero=document.getElementById('locations-intro');
   hero.className='zone-hero';hero.removeAttribute('style');
   hero.innerHTML='<div class="hero-copy"><div class="eyebrow">КПК СТАЛКЕРА / ТЕРРИТОРИЯ ОТЧУЖДЕНИЯ</div><h1>ЗОНА Z</h1><p>Исследуйте заброшенные объекты, ищите редкий хабар, артефакты и аномальные Gramcoin.</p><div class="hero-meta"><span>☢ 28 СЕКТОРОВ</span><span>ВЫЛАЗКИ В ЗОНУ</span></div></div>';
   hero.prepend(image('loc_pripyat_center','','Панорама заброшенной Припяти'));
