@@ -19,6 +19,45 @@
   let booted = false, enabled = false, running = false, queued = false;
   let savedText = null, pendingText = null, debounce = null, lastError = null;
   let active = null, lastSyncedAt = 0, retryDelay = 0, flushing = null;
+  let localError = null, localSavedAt = 0;
+
+  function renderSaveStatus() {
+    const panel = document.getElementById('zona-save-summary');
+    if (!panel) return;
+    const dirty = !!pendingText && pendingText !== savedText;
+    const title = localError ? 'Не удалось сохранить на устройстве' : running ? 'Синхронизация…' : !isTelegram ? 'Сохранение на устройстве' : lastError ? 'Ожидает синхронизации' : dirty ? 'Есть несинхронизированные изменения' : savedText ? 'Прогресс синхронизирован' : 'Ожидает первого сохранения';
+    panel.querySelector('[data-save-title]').textContent = title;
+    panel.querySelector('[data-save-time]').textContent = lastSyncedAt ? 'Telegram: ' + new Date(lastSyncedAt).toLocaleString('ru-RU') : 'Telegram: успешной синхронизации ещё не было';
+    panel.querySelector('[data-save-note]').textContent = localError ? 'Память устройства недоступна. Сохраните прогресс в Telegram.' : !isTelegram ? 'Облако доступно при запуске через Telegram.' : dirty ? (localSavedAt ? 'Изменения сохранены на этом устройстве. ' : '') + 'Автосинхронизация — раз в 3 минуты.' : 'Автосинхронизация — раз в 3 минуты.';
+    panel.dataset.state = localError || lastError ? 'error' : dirty ? 'pending' : 'saved';
+    const button = panel.querySelector('button');
+    button.hidden = !isTelegram;button.disabled = running || !enabled;
+  }
+  const PENDING_KEY = 'zona_pending_cloud_v1';
+  function rememberPending() {
+    try {
+      if (!isTelegram || !pendingText) return;
+      if (pendingText === savedText) {localStorage.removeItem(PENDING_KEY);return;}
+      // Only mark a snapshot recoverable when these exact bytes exist locally.
+      if (localStorage.getItem(LOCAL_KEY) !== pendingText) return;
+      localStorage.setItem(PENDING_KEY, JSON.stringify({user:userId,hash:checksum(pendingText),base:savedText ? checksum(savedText) : null}));
+    } catch (_) {}
+  }
+  function pendingRecovery(data) {
+    try {
+      if(data?.deleted) {localStorage.removeItem(PENDING_KEY);return null;}
+      const marker=JSON.parse(localStorage.getItem(PENDING_KEY)||'null');
+      const text=localStorage.getItem(LOCAL_KEY);
+      if(!marker || marker.user!==userId || !text || checksum(text)!==marker.hash) return null;
+      parsedState(text);
+      const base=data?.text ? checksum(data.text) : null;
+      if(marker.base===base) return text;
+      if(text!==data?.text) localStorage.setItem('zona_unsynced_backup_'+userId,text);
+      localStorage.removeItem(PENDING_KEY);
+    } catch (_) {}
+    return null;
+  }
+  function recordLocalSave(ok) {localError = ok ? null : 'Локальное сохранение недоступно';if(ok)localSavedAt=Date.now();renderSaveStatus();}
 
   // A lightweight PDA-style notification. It never claims a cloud save succeeded
   // until Telegram has confirmed the bank contents and the HEAD pointer write.
@@ -48,6 +87,7 @@
     (document.head || document.body).append(css);
   }
   function status(message, kind = 'info', sticky = false) {
+    renderSaveStatus();
     installNoticeStyles();
     let n = document.getElementById('zona-cloud-status');
     if (!n) {
@@ -174,7 +214,7 @@
     return null;
   }
   function localWrite(text) {
-    try {localStorage.setItem(LOCAL_KEY, text);} catch (e) {console.warn('[ZONA] Local cache unavailable', e);}
+    try {localStorage.setItem(LOCAL_KEY, text);recordLocalSave(true);} catch (e) {recordLocalSave(false);console.warn('[ZONA] Local cache unavailable', e);}
   }
   async function writeBank(text) {
     const bank = active === 'A' ? 'B' : 'A';
@@ -190,13 +230,14 @@
     savedText = text;
     lastSyncedAt = Date.now();
     lastError = null;
+    rememberPending();
     retryDelay = 0;
     status('☁ Прогресс сохранён в Telegram', 'success');
   }
   async function flush() {
     if (!isTelegram || !enabled) return;
     if (running) return flushing;
-    running = true;
+    running = true;renderSaveStatus();
     flushing = (async () => {
       try {
         const text = pendingText;
@@ -209,7 +250,7 @@
         status('⚠ Не удалось сохранить в Telegram: ' + error.message, 'error', true);
         // Retry on the next three-minute tick, or on an explicit save.
         throw error;
-      } finally {running = false;flushing = null;}
+      } finally {running = false;flushing = null;renderSaveStatus();}
     })();
     return flushing;
   }
@@ -219,7 +260,7 @@
     try {
       const text = JSON.stringify(state);
       if (!text) return;
-      pendingText = text;
+      pendingText = text;rememberPending();renderSaveStatus();
     } catch (e) {lastError = e;status('⚠ Ошибка сериализации прогресса', 'error', true);}
   }
   async function clearForReset() {
@@ -230,8 +271,8 @@
     await put(HEAD, JSON.stringify({deleted:true,savedAt:Date.now(),version:1}));
     active = null;savedText = null;pendingText = null;
   }
-  const api = {isTelegram, queueSave, flush, reset:clearForReset,
-    get status() {return {telegram:isTelegram, ready:booted, savedAt:lastSyncedAt, error:lastError?.message || null};}};
+  const api = {isTelegram, queueSave, flush, recordLocalSave, reset:clearForReset,
+    get status() {return {telegram:isTelegram, ready:booted, savedAt:lastSyncedAt, error:lastError?.message || null, pending:!!pendingText && pendingText!==savedText, saving:running, localSavedAt, localError};}};
   window.ZonaTelegramCloud = api;
 
   async function boot() {
@@ -242,6 +283,7 @@
         if (!cloud || typeof cloud.getItems !== 'function' || typeof cloud.setItem !== 'function') throw new Error('Обновите Telegram: CloudStorage недоступен');
         status('☁ Загрузка прогресса из Telegram…', 'info', true);
         const data = await loadCloud();
+        const recovered = pendingRecovery(data);
         const prevUser = localStorage.getItem(BOUND_KEY);
         if (prevUser && prevUser !== userId) {
           // Do not leak one Telegram user's local cache into another user's profile.
@@ -254,10 +296,11 @@
           localStorage.removeItem(LOCAL_KEY);localStorage.removeItem('zona_z_save_v9');localStorage.removeItem('zona_z_save_v5');
           savedText = null;active = null;
         } else if (data?.text) {
-          localWrite(data.text);
+          localWrite(recovered || data.text);
           // Clear stale legacy fallback saves: v10 now always has precedence.
-          savedText = data.text;active = data.bank;
-          status('☁ Прогресс загружен из Telegram', 'success');
+          savedText = data.text;active = data.bank;lastSyncedAt = Number(data.meta.savedAt) || 0;
+          if(recovered && recovered!==data.text) {pendingText=recovered;status('Локальные изменения восстановлены. Ожидаем синхронизации.');}
+          else status('☁ Прогресс загружен из Telegram', 'success');
         } else {
           // On first cloud launch, retain and migrate any previously stored progress.
           status('☁ Первое сохранение будет создано автоматически');
@@ -271,6 +314,11 @@
     booted = true;
     window.dispatchEvent(new Event('zona:ready'));
     enabled = isTelegram;
+    const summaryButton = document.querySelector('#zona-save-summary button');
+    if(summaryButton) summaryButton.onclick = async () => {
+      try {window.game?.saveState?.();await flush();} catch (_) {} finally {renderSaveStatus();}
+    };
+    renderSaveStatus();
     if (isTelegram) {
       const saveButton = document.getElementById('zona-save-now');
       if (saveButton) {
@@ -280,7 +328,7 @@
             window.game?.saveState?.();
             const before = lastSyncedAt;
             await flush();
-            if (before === lastSyncedAt) status('Прогресс актуален', 'success');
+            if (pendingText === savedText && before === lastSyncedAt) status('Прогресс актуален', 'success');
           } catch (e) {
             // flush() already displays a themed error notification.
             console.warn('[ZONA] Manual cloud save failed', e);
