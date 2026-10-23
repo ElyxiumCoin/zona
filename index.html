@@ -63,6 +63,19 @@ html.zona-interface-ready #zona-startup-screen{display:none}
 </script>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script id="zona-telegram-swipe-guard">
+(()=>{
+ function protectScroll(){
+  const app=window.Telegram?.WebApp;
+  if(!app || typeof app.disableVerticalSwipes!=='function')return;
+  if(typeof app.isVersionAtLeast==='function'&&!app.isVersionAtLeast('7.7'))return;
+  try{app.disableVerticalSwipes();}catch(e){console.warn('[ZONA] Swipe protection unavailable',e);}
+ }
+ protectScroll();
+ window.addEventListener('pageshow',protectScroll);
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)protectScroll();});
+})();
+</script>
 <script src="./telegram-cloud-save.js"></script>
 <style>
 :root{--bg:#070c09;--panel:#0d150f;--card:#121c14;--border:#1e3323;--green:#2ecc71;--neon:#00ff88;--gold:#f1c40f;--red:#ff4757;--cyan:#00d2d3;--tg:#229ED9;--text:#e2f0e5;--muted:#789980}
@@ -1378,7 +1391,7 @@ html.proportion-v2 body #app#app #kpk-buildings .reward-part-list p{font:11px/1.
 #zona-save-summary[data-state="saved"] [data-save-title]:before{background:#9bb581;box-shadow:0 0 6px #9bb58133}
 #zona-save-summary[data-state="error"] [data-save-title]:before{background:#d39272;box-shadow:none}
 </style></head>
-<body><div id="zona-startup-screen" role="status" aria-live="polite"><div class="startup-weather" aria-hidden="true"><div class="startup-rain"></div><div class="startup-fog"></div><div class="startup-lamp"></div></div><div class="startup-content"><div class="startup-eyebrow">КПК СТАЛКЕРА / ТЕРРИТОРИЯ ОТЧУЖДЕНИЯ</div><strong class="startup-title">ZONA Z</strong><div class="startup-caption">У ЗОНЫ ЕСТЬ СВОИ ПРАВИЛА</div><div class="startup-panel"><div class="startup-line"><span>ЗАГРУЗКА КПК</span><span id="zona-startup-percent">0%</span></div><div id="zona-startup-progress" class="startup-track" role="progressbar" aria-label="Подготовка к запуску" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="zona-startup-fill" class="startup-fill"></div></div><p id="zona-startup-message">Устанавливаем связь с КПК…</p><div class="startup-tip" aria-live="off"><strong>СОВЕТ СТАЛКЕРУ</strong><span id="zona-startup-tip">Сюжетное снаряжение нельзя продать или разобрать.</span></div></div><p class="startup-note">Подготовка занимает около 20 секунд.<br>Дождитесь завершения связи перед выходом в Зону.</p><p class="startup-version"><span class="startup-version-tag" aria-label="Версия игры 2026.10.22.7"><span class="startup-version-label">ВЕРСИЯ</span><span>2026.10.22.7</span></span></p></div></div>
+<body><div id="zona-startup-screen" role="status" aria-live="polite"><div class="startup-weather" aria-hidden="true"><div class="startup-rain"></div><div class="startup-fog"></div><div class="startup-lamp"></div></div><div class="startup-content"><div class="startup-eyebrow">КПК СТАЛКЕРА / ТЕРРИТОРИЯ ОТЧУЖДЕНИЯ</div><strong class="startup-title">ZONA Z</strong><div class="startup-caption">У ЗОНЫ ЕСТЬ СВОИ ПРАВИЛА</div><div class="startup-panel"><div class="startup-line"><span>ЗАГРУЗКА КПК</span><span id="zona-startup-percent">0%</span></div><div id="zona-startup-progress" class="startup-track" role="progressbar" aria-label="Подготовка к запуску" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="zona-startup-fill" class="startup-fill"></div></div><p id="zona-startup-message">Устанавливаем связь с КПК…</p><div class="startup-tip" aria-live="off"><strong>СОВЕТ СТАЛКЕРУ</strong><span id="zona-startup-tip">Сюжетное снаряжение нельзя продать или разобрать.</span></div></div><p class="startup-note">Подготовка занимает около 20 секунд.<br>Дождитесь завершения связи перед выходом в Зону.</p><p class="startup-version"><span class="startup-version-tag" aria-label="Версия игры 2026.10.22.8"><span class="startup-version-label">ВЕРСИЯ</span><span>2026.10.22.8</span></span></p></div></div>
 <div class="scanlines"></div>
 <div id="toast-box"></div>
 <div id="app">
@@ -1567,8 +1580,6 @@ html.proportion-v2 body #app#app #kpk-buildings .reward-part-list p{font:11px/1.
         <div class="stat-row"><span>👁️ Внимательность (+лут/Gramcoin):</span><div><strong id="val-per" style="color:#fff;margin-right:8px">10</strong><button class="btn btn-xs btn-green" id="btn-add-per" onclick="game.upgradeStat('per')">+</button></div></div>
       </div>
     </div>
-
-    <button id="zona-save-now" class="btn btn-dark btn-block btn-xs" style="display:none;color:var(--neon);margin-top:6px" onclick="game.saveState(); window.ZonaTelegramCloud.flush().then(()=>game.toast('Прогресс сохранён в Telegram','gold')).catch(()=>game.toast('Облако недоступно — попробуйте ещё раз','red'))">☁ Сохранить в Telegram сейчас</button>
     <button class="btn btn-dark btn-block btn-xs" style="color:var(--red);margin-top:6px" onclick="game.resetProgress()">⚠️ Сбросить весь прогресс сталкера</button>
   </div></div>
 
